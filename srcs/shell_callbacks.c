@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/30 18:18:40 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/05 05:04:01 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/07/05 06:58:03 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,15 @@ int	shell_cmd_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	if ((ret = execbuiltin(ast->name, ast->args) == -1))
 		*(int *)res = 127;
 	else
+	{
 		*(int *)res = ret;
+		return (0);
+	}
 	ret = ft_getfullpath(ast->name, g_shell->paths, buff, 1024);
 	if (*(int *)res == 127 && !*buff)
 		ft_printf_fd(2, "21sh: %s: %s\n", ft_strshret(ret), ast->name);
+	*(int *)res = ft_exec(buff, ast->args->argv, g_shell->envp,
+				&g_shell->curpid);
 	return (0);
 }
 
