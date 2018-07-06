@@ -6,13 +6,13 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/07/05 03:43:31 by jraymond         ###   ########.fr        #
+#    Updated: 2018/07/06 12:34:36 by jraymond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	21sh
 CC			=	gcc
-CFLAGS		=	-Wall -Werror -Wextra -g -fsanitize=address
+CFLAGS		=	-Wall -Werror -Wextra -g3 -fsanitize=address
 
 LIBFTD		=	libft
 LIBFT		=	$(LIBFTD)/libft.a
@@ -23,7 +23,7 @@ _NTS	=		main.c ft_parser.c ft_getpaths.c shell_begin.c ft_env2.c \
 				builtin_setenv.c builtin_env.c shell_init.c ft_astdel.c ft_lexer.c \
 				ft_parsepath.c handle_rdrctn.c exp_func.c ft_resolver.c \
 				ft_expr.c ft_expr2.c expr_callbacks.c expr_callbacks2.c expr_func.c \
-				shell_callbacks.c
+				shell_callbacks.c exec_pipe.c
 
 SRCD		=	srcs/
 ICLD		=	-Iincludes -I$(LIBFTD)/includes

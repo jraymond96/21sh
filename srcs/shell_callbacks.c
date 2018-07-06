@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/30 18:18:40 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/05 06:58:03 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/07/06 15:20:48 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int	shell_cmd_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	*buff = '\0';
 	if ((efail = ft_astresolver(ast, iterf->resolve_first)))
 		return (efail);
-	ft_printf("COMMAND CALLBACK: '%s'\n", ast->name);
 	if ((ret = execbuiltin(ast->name, ast->args) == -1))
 		*(int *)res = 127;
 	else
@@ -53,7 +52,6 @@ int	shell_andor_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 
 int	shell_seco_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 {
-	ft_printf("SEMI-COLON CALLBACK: '%s'\n", ast->name);
 	if (ast->right && ast->right->name)
 		*(int *)res = *(int *)op[1];
 	(void)op;
@@ -64,7 +62,8 @@ int	shell_seco_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 
 int	shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 {
-	ft_printf("PIPE CALLBACK: '%s'\n", ast->name);
+	ft_printf("COMMAND PIPE\n");
+	exec_pipe(ast, res);
 	(void)op;
 	(void)res;
 	(void)iterf;

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 18:40:09 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/05 06:43:48 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/07/06 05:37:56 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static t_astfunc	g_shell_callbacks[] = {
 	*/
 	{"&&:||", shell_andor_cb, NULL, -1},
 	{";", shell_seco_cb, NULL, 2},
-	{"|", shell_pipe_cb, NULL, 2},
+	{"|", NULL, shell_pipe_cb, 0},
 	{DLM_REDP, NULL, shell_redir_cb, 0}
 };
 

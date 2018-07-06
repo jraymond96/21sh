@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/05 04:39:25 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/07/06 08:15:31 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -347,5 +347,7 @@ int					expr_equ_cb(t_ast *ast, void **op, void *res,
 									t_iterf *iterf);
 int					expr_tern_cb(t_ast *ast, void **op, void *res,
 									t_iterf *iterf);
+
+int					exec_pipe(t_ast *ast, void *res);
 
 #endif

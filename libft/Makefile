@@ -1,6 +1,6 @@
 NAME		=	libft.a
 CC			=	gcc
-CFLAGS		=	-Wall -Werror -Wextra -g -fsanitize=address
+CFLAGS		=	-Wall -Werror -Wextra -g3 -fsanitize=address
 
 _PRINTFS	=	ft_printf.c ft_vprintf.c \
 				ft_printf_parser.c ft_printf_format.c ft_init_formats.c \

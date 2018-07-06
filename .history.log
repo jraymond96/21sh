@@ -36,3 +36,100 @@ ls
 cd /Users
 pwd
 exit
+cd /
+pwd
+exit
+cd
+cd -
+cd
+cd -
+cd /
+exit
+cd /Users
+exit
+cd /Users
+exit
+cd /Users
+exit
+cd /Users
+exit
+cd /Users
+exit
+cd /Users
+exit
+cd /Users
+clear
+exit
+cd /Users
+exit
+cd /
+exit
+cd /Users
+cd ~
+cd -
+ls
+pwd
+fwehfnj
+pwd
+exit
+toto | tutu
+exit
+toto | tutu
+exit
+toto | tutu
+exit
+ls
+toto | tutu
+exit
+toto | tutu
+exit
+echo toto | cat -e
+exit
+echo toto | cat -e
+exit
+echo toto | cat -e
+exit
+echo toto | cat -e
+exit
+ls
+echo toto | cat -e
+exit
+echo toto | cat -e
+exit
+echo toto | cat -e
+exit
+echo toto | cat -e
+exit
+echo toto | cat -e
+exit
+echo toto | cat -e
+exit
+echo toto | cat -e
+exit
+echo toto | cat -e
+echo momo est un prout | cat -e
+echo momo est un prout\n\n\n | cat -e
+htjithik
+echo momo est un prout\n\n\n | cat -e
+echo "momo est un prout\n\n\n" | cat -e
+echo 'momo est un prout\n\n\n' | cat -e
+echo 'momo est un prout\n\n\n'
+echo $'momo est un prout\n\n\n'
+echo $"momo est un prout\n\n\n"
+echo $'momo est un prout\n\n\n' | cat -e
+echo $'momo est un prout\n\n\n'
+exit
+echo $'toto\n\n\n' | cat -e
+exit
+ls
+echo $PATH | cat -e
+exit
+echo $PATH | cat -e
+exit
+echo $'coucou\n\n\n\n' | cat -e
+exit
+echo $'coucou\n\n\n\n' | cat -e
+exit
+echo $'coucou\n\n\n\n' | cat -e
+echo $PATH | cat -e
+exit
