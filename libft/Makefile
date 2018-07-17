@@ -38,7 +38,7 @@ _LIBFTS	=	ft_abs.c ft_pow.c ft_sqrt.c ft_max.c ft_fmax.c ft_hexcolor.c \
 			ft_strsplit.c ft_strstr.c ft_strsub.c ft_strtrim.c ft_swap.c \
 			ft_strpbrk.c ft_strbetween.c ft_strnpbrk.c ft_strtks.c ft_getmchi.c \
 			ft_strforeach.c ft_swapptr.c ft_tobase.c ft_tolower.c ft_toupper.c \
-			ft_wcharlen.c ft_getwchar.c ft_wstrlen.c ft_getwstr.c \
+			ft_wcharlen.c ft_getwchar.c ft_wstrlen.c ft_getwstr.c ft_strmatch_opt.c \
 			ft_event_new.c ft_event_add.c ft_event_trigger.c ft_event_clean.c \
 			ft_pevent_new.c ft_pevent_add.c ft_pevent_remove.c ft_strbetweenps.c \
 			ft_pevent_trigger.c ft_pevent_clean.c ft_strchrln.c ft_strmatch_old.c \
@@ -48,6 +48,7 @@ _LIBFTS	=	ft_abs.c ft_pow.c ft_sqrt.c ft_max.c ft_fmax.c ft_hexcolor.c \
 			ft_mat_rotate.c ft_mat_transform.c ft_strmatch.c ft_strntks.c \
 			ft_vec_new.c ft_vec_dump.c ft_vec_add.c ft_vec_mult.c ft_vec_get.c \
 			ft_vec_sub.c ft_vec_div.c ft_vec_calc.c ft_vec_zero.c ft_vec_normalize.c \
+			ft_strpbrkstrp.c ft_strpbrkstrp_len.c ft_strcatl.c ft_strjoinl.c
 
 _ICLDS		= libft.h ft_str.h ft_io.h ft_mem.h ft_list.h ft_btree.h ft_math.h \
 			ft_printf.h ft_time.h get_next_line.h ft_event.h ft_matrix.h \
@@ -84,12 +85,12 @@ $(NAME): $(OBJB)
 	@ranlib $(NAME)
 	@echo  "$(NAME): $(CGREEN)done$(CEND)"
 
-$(OBJD)%.o: $(SRCD)%.c $(ICLDS)
+$(OBJD)%.o: $(SRCD)%.c $(ICLDS) Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $@"
 	@mkdir -p $(OBJD)
 	@$(CC) $(CFLAGS) -o $@ -c $< -I$(ICLD)
 
-$(OBJD)%.o: $(PRINTFD)%.c $(ICLDS)
+$(OBJD)%.o: $(PRINTFD)%.c $(ICLDS) Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $@"
 	@mkdir -p $(OBJD)
 	@$(CC) $(CFLAGS) -o $@ -c $< -I$(ICLD)

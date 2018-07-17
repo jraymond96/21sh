@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/14 17:21:45 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/06 13:12:44 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/07/10 17:38:43 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,15 @@ int		ft_exec(char *name, char **argv, char **envp, pid_t *pid)
 	if (!(pidl = fork()))
 	{
 		execve(name, argv, envp);
-		exit(-1);
+		exit(126);
 	}
-	else if (pidl)
-	{
-		if (pid)
-			*pid = pidl;
+	else if (pidl == -1)
+		return (-1);
+	if (pid)
+		*pid = pidl;
+	if (!g_shell->dontwait)
 		wait(&ret);
-	}
-	return (ret == 65280 ? -1 : ret);
+	return (WEXITSTATUS(ret));
 }
 
 char	*ft_getcwd(char *pwd, size_t size)

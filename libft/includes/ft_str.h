@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/19 18:42:15 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/04 20:30:39 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/07/11 18:23:45 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,11 @@
 # include <stdlib.h>
 # include <wctype.h>
 
-typedef struct		s_pair
-{
-	void			*first;
-	void			*second;
-}					t_pair;
-
 size_t				ft_strlen(const char *s);
 size_t				ft_strlenl(const char *s);
 size_t				ft_strlenk(const char *s);
 size_t				ft_strlenli(const char *s);
+char				*ft_strend(const char *str);
 
 char				*ft_strdup(const char *s);
 char				*ft_strndup(const char *s, size_t n);
@@ -44,6 +39,8 @@ char				*ft_strncpy(char *dst, const char *src, size_t n);
 char				*ft_strcat(char *a, const char *b);
 char				*ft_strcatc(char *a, char b);
 char				*ft_strncat(char *a, const char *b, size_t n);
+char				*ft_strcatl(char *a, const char *b);
+char				*ft_strncatl(char *a, const char *b, size_t n);
 size_t				ft_strlcat(char *a, const char *b, size_t n);
 
 char				*ft_strchr(const char *s, int c);
@@ -65,6 +62,7 @@ int					ft_strnpbrkl_pos(const char *s,
 char				*ft_strnpbrkl(const char *s,
 								const char *charset,
 								size_t n);
+
 int					ft_strpbrkstr_len(const char *a, const char *strset);
 int					ft_strpbrkstrl_len(const char *a, const char *strset);
 int					ft_strpbrkstr_pos(const char *a, const char *strset);
@@ -77,7 +75,22 @@ int					ft_strnpbrkstr_pos(const char *a, const char *strset,
 									int n);
 int					ft_strnpbrkstrl_pos(const char *a, const char *strset,
 									int n);
-int					ft_strequbeg(const char *a, const char *b);
+int					ft_strpbrkstrp_len(const char *a,
+									const void *data,
+									size_t size,
+									...);
+int					ft_strpbrkstrpl_len(const char *a,
+									const void *data,
+									size_t size,
+									...);
+int					ft_strpbrkstrp_pos(const char *a,
+									const void *data,
+									size_t size,
+									...);
+int					ft_strpbrkstrpl_pos(const char *a,
+									const void *data,
+									size_t size,
+									...);
 
 int					ft_strcmp(const char *a, const char *b);
 int					ft_strncmp(const char *a, const char *b, size_t n);
@@ -121,12 +134,6 @@ char				*ft_strmapi(char *s, char (*f)(unsigned int, char));
 int					ft_strequ(const char *a, const char *b);
 int					ft_strnequ(const char *a, const char *b, size_t n);
 char				*ft_strsub(const char *s, unsigned int start, size_t len);
-char				*ft_strjoin(const char *a, const char *b);
-char				*ft_strjoinc(const char *a, char b);
-char				*ft_strjoincs(char a, const char *b);
-char				*ft_strjoin_clr(char *a, char *b, int d);
-char				*ft_strjoinc_clr(char *a, char b);
-char				*ft_strjoincs_clr(char a, char *b);
 char				*ft_strtrim(const char *s);
 char				*ft_strtrim_clr(char *s);
 char				**ft_strsplit(const char *s, char sep);
@@ -153,6 +160,19 @@ char				*ft_strbetweenstr_ext(const char *s,
 									const char *ext);
 int					ft_strbetweenps_ext(char **s, const char *ext);
 
+char				*ft_strjoin(const char *a, const char *b);
+char				*ft_strnjoin(const char *a, const char *b, size_t n);
+char				*ft_strjoinc(const char *a, char b);
+char				*ft_strjoincs(char a, const char *b);
+char				*ft_strnjoin_clr(char *a, char *b, size_t n, int d);
+char				*ft_strjoin_clr(char *a, char *b, int d);
+char				*ft_strjoinc_clr(char *a, char b);
+char				*ft_strjoincs_clr(char a, char *b);
+char				*ft_strjoinl(const char *a, const char *b);
+char				*ft_strnjoinl(const char *a, const char *b, size_t n);
+char				*ft_strjoinl_clr(char *a, char *b, int d);
+char				*ft_strnjoinl_clr(char *a, char *b, size_t n, int d);
+
 typedef struct		s_pairint
 {
 	char			*ext;
@@ -171,10 +191,17 @@ typedef struct		s_mchi
 	int				len;
 	int				t;
 	int				whatever;
+	int				level;
 	struct s_mchi	*next;
 }					t_mchi;
 
+# define RGX_END 1
+# define RGX_BKSLSH 2
+# define RGX_N 4
+
 extern int			g_iread;
+extern int			g_explicitlev;
+extern int			g_ifound;
 
 t_mchi				*ft_getmchi(const char *match);
 void				ft_delmchi(t_mchi *head);
@@ -183,11 +210,23 @@ int					ft_strmatch_old(const char *str, const char *match);
 int					ft_strmatch(const char *str, const char *match);
 int					ft_strmatchl(const char *str, const char *match);
 int					ft_strmatch_x(const char *a, const char *strset);
-int					ft_strtks(const char *str, t_mchi *tks);
 
 int					ft_strnmatch(const char *str, const char *match, int n);
 int					ft_strnmatchl(const char *str, const char *match, int n);
-int					ft_strntks(const char *str, t_mchi *tks, int n);
+
+int					ft_strmatch_opt(const char *str,
+							const char *match,
+							int option);
+int					ft_strnmatch_opt(const char *str,
+							const char *match,
+							int n,
+							int option);
+
+int					ft_strtks(const char *str, t_mchi *tks, int option);
+int					ft_strntks(const char *str,
+							t_mchi *tks,
+							int n,
+							int option);
 
 int					checkwild3(const char **str,
 							t_mchi *cur,

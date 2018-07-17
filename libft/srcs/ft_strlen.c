@@ -6,12 +6,13 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/09 15:42:54 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/03/25 16:19:38 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/07/10 23:00:40 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_str.h"
 #include "ft_types.h"
+#include "ft_mem.h"
 
 static t_pair	g_escseq[] = {
 	{"n", "\n"}, {"t", "\t"}, {"b", "\b"}, {"a", "\a"}, {"f", "\f"},
@@ -85,7 +86,7 @@ static int	checkescseq(const char **s)
 
 	j = -1;
 	while (++j < g_escseq_n)
-		if (**s == *(char *)g_escseq[j].first && (*s)++)
+		if (**s == *(char *)g_escseq[j].a && (*s)++)
 			break ;
 	if (j == g_escseq_n)
 	{

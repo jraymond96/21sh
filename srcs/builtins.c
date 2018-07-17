@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:29:29 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/04/16 21:51:17 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/07/16 17:38:10 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ int			builtin_exit(int argc, char **argv)
 {
 	g_shell->running = 0;
 	if (argc > 1)
-		g_shell->exitcode = (int)ft_atoui(argv[1]);
-	return (0);
+		return ((int)ft_atoui(argv[1]));
+	return (g_shell->exitcode);
 }
 
 static int	checkhistory(int clearh)

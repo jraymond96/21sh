@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expr_callbacks2.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/07/06 01:53:44 by mmerabet          #+#    #+#             */
+/*   Updated: 2018/07/08 22:48:54 by mmerabet         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "shell.h"
 #include "ft_str.h"
 #include "ft_types.h"
@@ -18,22 +30,24 @@ int	expr_incdec_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	name = (ast->u == 1 ? ast->right->name : ast->left->name);
 	if (!ft_strmatch_x(name, EXPR_DLM_VARV))
 		return (EXPR_LVALREQ);
-	tmp = ft_getenv(name, ((t_exprdata *)ast->data)->var_db);
+	tmp = ft_getenv(name, *((t_exprdata *)ast->data)->var_db);
 	itmp = (EXPRT)ft_atoll(ft_getenv(name,
-				((t_exprdata *)ast->data)->var_db));
+				*((t_exprdata *)ast->data)->var_db));
 	if (*ast->name == '+')
 		*(EXPRT *)res = (ast->u == 1 ? ++itmp : itmp++);
 	else
 		*(EXPRT *)res = (ast->u == 1 ? --itmp : itmp--);
 	ft_setenv(name, (tmp = ft_lltoa(itmp)),
-			&((t_exprdata *)ast->data)->var_db);
+			((t_exprdata *)ast->data)->var_db);
 	free(tmp);
 	return (0);
 }
 
 int	expr_unary_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 {
-	int	efail;
+	int		efail;
+	int		i;
+	va_list	vp;
 
 	(void)op;
 	if ((!ast->left || !ast->left->name) && (!ast->right || !ast->right->name))
@@ -50,6 +64,18 @@ int	expr_unary_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		*(EXPRT *)res = !(*(EXPRT *)res);
 	else if (*ast->parent->name == '~')
 		*(EXPRT *)res = ~(*(EXPRT *)res);
+	else if (*ast->parent->name == '@')
+	{
+		va_copy(vp, ((t_exprdata *)ast->data)->vp);
+		efail = *(int *)res;
+		*(EXPRT *)res = (EXPRT)0;
+		i = 0;
+		while (i < ((t_exprdata *)ast->data)->vp_limit && i++ < efail)
+			*(EXPRT *)res = va_arg(vp, EXPRT);
+		va_end(vp);
+		if (i < efail)
+			return (EXPR_OUTRANGE);
+	}
 	return (0);
 }
 

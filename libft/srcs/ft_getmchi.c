@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/13 17:35:02 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/05/22 20:44:57 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/07/12 22:38:51 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,17 +44,17 @@ static t_mchi	*newmchi(const char **s, int len, int t)
 
 	if (!(mchi = ft_memalloc(sizeof(t_mchi))))
 		return (NULL);
-	if (!t)
-		mchi->str = ft_strndupl(*s, len);
-	else
+	if (!t && (mchi->str = ft_strndupl(*s, len)))
+		mchi->level = ft_strlen(mchi->str);
+	else if (t)
 	{
-		mchi->str = NULL;
 		mchi->type = 1;
 		mchi->len = -1;
 		mchi->whatever = 1;
 		*s += len;
 		if (**s == '[' && (len = ft_strpbrkl_pos(*s, "]")) != -1)
 		{
+			mchi->whatever = 0;
 			mchi->type = 2;
 			t = getlen(*s, len, mchi);
 			if (!*(mchi->str =
@@ -62,6 +62,7 @@ static t_mchi	*newmchi(const char **s, int len, int t)
 				mchi->type = 1;
 			*s += len + 1;
 		}
+		mchi->level = (mchi->type == 3 ? 2 : 1);
 	}
 	return (mchi);
 }
@@ -72,17 +73,20 @@ static t_mchi	*addmchi(t_mchi **head, t_mchi *nw)
 
 	if (!(tail = *head))
 		return (*head = nw);
+	(*head)->level += nw->level;
 	while (tail->next)
 		tail = tail->next;
 	tail->whatever = 0;
 	return (tail->next = nw);
 }
 
+int				g_explicitlev;
+
 t_mchi			*ft_getmchi(const char *match)
 {
-	t_mchi	*head;
-	int		pos;
-	int		len;
+	t_mchi		*head;
+	int			pos;
+	int			len;
 
 	head = NULL;
 	while (*match)
@@ -98,6 +102,7 @@ t_mchi			*ft_getmchi(const char *match)
 		else
 			match += len;
 	}
+	g_explicitlev = head->level;
 	return (head);
 }
 

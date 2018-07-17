@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/19 18:42:03 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/05/19 18:38:42 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/07/17 14:17:55 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,12 @@
 # define FT_MEM_H
 
 # include <stdlib.h>
+
+typedef struct		s_pair
+{
+	void			*a;
+	void			*b;
+}					t_pair;
 
 void				*ft_memset(void *s, int c, size_t n);
 void				*ft_bzero(void *s, size_t n);
@@ -52,6 +58,7 @@ void				*ft_memjoin_clr2(void *a,
 							size_t an,
 							void *b,
 							size_t bn);
+t_pair				ft_make_pair(void *a, void *b);
 void				ft_swapptr(void **a, void **b);
 
 int					ft_memdel_x(size_t n, ...);

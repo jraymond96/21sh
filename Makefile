@@ -6,7 +6,7 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/07/06 12:34:36 by jraymond         ###   ########.fr        #
+#    Updated: 2018/07/17 19:47:54 by jraymond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,13 +17,18 @@ CFLAGS		=	-Wall -Werror -Wextra -g3 -fsanitize=address
 LIBFTD		=	libft
 LIBFT		=	$(LIBFTD)/libft.a
 
-_NTS	=		main.c ft_parser.c ft_getpaths.c shell_begin.c ft_env2.c \
-				ft_getcursor.c builtins.c ft_isbuiltin.c builtin_cd.c ft_env.c \
-				ft_readraw.c ft_exec.c history.c ft_getopt.c builtin_echo.c ft_astiter.c \
-				builtin_setenv.c builtin_env.c shell_init.c ft_astdel.c ft_lexer.c \
-				ft_parsepath.c handle_rdrctn.c exp_func.c ft_resolver.c \
-				ft_expr.c ft_expr2.c expr_callbacks.c expr_callbacks2.c expr_func.c \
-				shell_callbacks.c exec_pipe.c
+_NTS	=		main.c \
+				ft_readraw.c ft_parser.c ft_lexer.c ft_astiter.c ft_resolver.c ft_getopt.c \
+				ft_astdel.c newast.c \
+				ft_env.c ft_env2.c ft_getcursor.c ft_exec.c ft_isbuiltin.c ft_getpaths.c \
+				ft_parsepath.c handle_rdrctn.c history.c \
+				builtins.c builtin_cd.c builtin_echo.c builtin_setenv.c \
+				builtin_bool.c builtin_env.c \
+				shell_init.c shell_begin.c \
+				shell_expansions.c shell_pipe.c shell_arithmetic.c shell_condition.c \
+				shell_command.c shell_redir.c \
+				ft_expr.c expr_callbacks.c expr_callbacks2.c expr_func.c \
+				exec_cmd_background.c builtin_jobs.c handle_bgstatus.c\
 
 SRCD		=	srcs/
 ICLD		=	-Iincludes -I$(LIBFTD)/includes
@@ -58,7 +63,7 @@ $(LIBFT):;
 lib:
 	@make -C $(LIBFTD)
 
-$(OBJD)%.o: $(SRCD)%.c includes/shell.h
+$(OBJD)%.o: $(SRCD)%.c includes/shell.h includes/pipe.h Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $@"
 	@mkdir -p $(OBJD)
 	@$(CC) $(CFLAGS) -o $@ -c $< $(ICLD)
@@ -70,7 +75,7 @@ clean:
 
 fclean: clean
 	@make -C $(LIBFTD) fclean
-	@echo "$(CRED)Full leaning$(CEND): $(NAME)"
+	@echo "$(CRED)Full cleaning$(CEND): $(NAME)"
 	@/bin/rm -f $(NAME)
 
 re:

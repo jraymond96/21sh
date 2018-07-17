@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/19 18:43:23 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/05/18 17:27:12 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/07/06 02:16:59 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,17 @@
 # ifndef FT_CMPFUNC_T
 #  define FT_CMPFUNC_T
 
-typedef int		(*t_cmpfunc)(const void *, const void *, size_t);
+typedef int			(*t_cmpfunc)(const void *, const void *, size_t);
 
 # endif
 
 # ifndef FT_DELFUNC_T
 #  define FT_DELFUNC_T
 
-typedef void	(*t_delfunc)(void *, size_t);
-typedef void	(*t_delfunc_d)(void *, size_t, void *);
+typedef void		(*t_delfunc)(void *, size_t);
+typedef void		(*t_delfunc_d)(void *, size_t, void *);
 
-void			content_delfunc(void *a, size_t b);
+void				content_delfunc(void *a, size_t b);
 
 # endif
 

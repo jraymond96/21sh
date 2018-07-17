@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:09:27 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/06 15:20:50 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/07/09 21:44:11 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,23 +60,52 @@ int		ft_getfullpath(char *fname, char **paths, char *fullpath, size_t size)
 		}
 		++it;
 	}
-	*fullpath = '\0';
 	return (shret);
 }
 
-char	*ft_strshret(t_shret shret)
+static t_op	g_shellerrs[] = {
+	{"success", SH_OK},
+	{"permission denied", SH_ADENIED},
+	{"command not found", SH_NFOUND},
+	{"no such file or directory", SH_NEXIST},
+	{"not a directory", SH_NDIR},
+	{"not a file",  SH_NFILE},
+	{"operation failed", SH_EFAIL},
+	{"operation success", SH_ESUCCESS},
+	{"pipe has failed", SH_PIPFAIL},
+	{"dup failed", SH_DUPFAIL},
+	{"fork failed", SH_FORKFAIL},
+	{"exec format error", SH_EXECERR},
+	{"none", SH_NONE},
+	{"limit order number in the background", SH_MAXBGPROC},
+	{"if without then", SH_IFWTHEN},
+	{"then without if", SH_THENWIF},
+	{"else without if", SH_ELSEWIF}
+};
+static size_t	g_shellerrs_len = (sizeof(g_shellerrs) / sizeof(t_op));
+
+char	*ft_strshret(int shret)
 {
-	if (shret == SH_OK)
-		return ("success");
-	else if (shret == SH_ADENIED)
-		return ("permission denied");
-	else if (shret == SH_NFOUND)
-		return ("command not found");
-	else if (shret == SH_NEXIST)
-		return ("no such file or directory");
-	else if (shret == SH_NDIR)
-		return ("not a directory");
-	else if (shret == SH_EFAIL)
-		return ("operation failed");
-	return ("none");
+	size_t	i;
+
+	i = 0;
+	if (shret > SH_EXPRERR)
+		return (ft_exprerr(shret - SH_EXPRERR));
+	while (i < g_shellerrs_len)
+	{
+		if (shret == g_shellerrs[i].t)
+			return (g_shellerrs[i].name);
+		++i;
+	}
+	return ("");
+}
+
+int		ft_printshret(int shret, char *name)
+{
+	if (name)
+		ft_printf_fd(2, "%s: %s: %s\n", g_shell->name, ft_strshret(shret),
+				name);
+	else
+		ft_printf_fd(2, "%s: %s\n", g_shell->name, ft_strshret(shret));
+	return (1);
 }

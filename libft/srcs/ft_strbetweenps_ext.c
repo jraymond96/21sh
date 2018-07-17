@@ -6,12 +6,11 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 16:09:34 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/05/28 16:10:23 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/07/08 16:22:30 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_str.h"
-#include "ft_printf.h"
 #include "ft_mem.h"
 
 static int	checkbet(char **s, t_pairint *pi)
@@ -106,10 +105,8 @@ int			ft_strbetweenps_ext(char **s, const char *ext)
 	while (*it)
 	{
 		if (*it == '\\' && ++it)
-		{
-			if (!*(it++))
+			if (!*it || !*(++it))
 				break ;
-		}
 		ret = checkext(&it, (char *)ext, &pi, r);
 		if (ret == -1)
 			++it;

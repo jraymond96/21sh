@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/25 20:30:00 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/04 00:41:08 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/07/16 17:36:19 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int			expr_cond_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	if (ft_strequ(ast->name, "&&") && !(*(EXPRT *)op[0]))
 		return ((*(EXPRT *)res = 0));
 	else if (ft_strequ(ast->name, "||") && *(EXPRT *)op[0])
-		return ((*(EXPRT *)res = 1));
+		return (!(*(EXPRT *)res = 1));
 	if ((efail = ft_astiter(ast->right, (void *)op[1], iterf)))
 		return (efail);
 	if (ft_strequ(ast->name, "&&"))
@@ -51,12 +51,12 @@ int			expr_equ_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		*(EXPRT *)res = *(EXPRT *)op[1];
 	else
 	{
-		efail = (EXPRT)ft_atoll(ft_getenv(ast->left->name, data->var_db));
+		efail = (EXPRT)ft_atoll(ft_getenv(ast->left->name, *data->var_db));
 		ft_memcpy(op[0], &efail, sizeof(EXPRT));
 		if ((efail = (EXPRT)expr_arth_cb(ast, op, res, iterf)))
 			return ((int)efail);
 	}
-	ft_setenv(ast->left->name, (tmp = ft_lltoa(*(EXPRT *)res)), &data->var_db);
+	ft_setenv(ast->left->name, (tmp = ft_lltoa(*(EXPRT *)res)), data->var_db);
 	free(tmp);
 	return (0);
 }

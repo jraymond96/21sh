@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/18 18:12:06 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/06/02 22:42:03 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/07/06 08:12:25 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	expr_variable(char *tld, int n[3], t_exprdata *data, char **res)
 		return (EXPR_BADEXPR);
 	tmp = tld[n[0]];
 	tld[n[0]] = '\0';
-	if (!(value = ft_getenv(tld, data->var_db)))
+	if (!(value = ft_getenv(tld, *data->var_db)))
 	{
 		*res = ft_strdup("0");
 		return (0);

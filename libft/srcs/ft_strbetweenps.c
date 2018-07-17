@@ -6,11 +6,12 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 16:08:44 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/05/28 16:08:57 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/07/08 21:28:46 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_str.h"
+#include "ft_printf.h"
 
 int		ft_strbetweenps(char **s, const char *a, const char *b)
 {
@@ -57,14 +58,22 @@ char	*ft_strbetweenstr(const char *s, const char *a, const char *b)
 int		checkwild3(const char **str, t_mchi *cur, t_mchi *nxt, int n)
 {
 	char		*ptr;
+	char		*it;
 	int			len;
 
 	(void)nxt;
+	it = ft_strdupl(cur->str);
 	ptr = (char *)*str;
-	if ((len = ft_strbetweenps_ext(&ptr, cur->str)) == -1 || ptr > *str)
+	if ((len = ft_strbetweenps_ext(&ptr, it)) == -1 || ptr > *str)
+	{
+		free(it);
 		return (-1);
-	g_iread += len;
+	}
 	if (n)
+	{
+		g_iread += len;
 		*str += len;
+	}
+	free(it);
 	return (1);
 }

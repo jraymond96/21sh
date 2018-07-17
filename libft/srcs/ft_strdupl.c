@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 16:23:41 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/05/02 21:11:16 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/07/10 23:02:15 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,8 @@ static char	checkescseq(const char **s)
 	ft_bzero(cs, 4);
 	j = -1;
 	while (++j < g_escseq_n)
-		if (**s == *(char *)g_escseq[j].first && (*s)++)
-			return (*(char *)g_escseq[j].second);
+		if (**s == *(char *)g_escseq[j].a && (*s)++)
+			return (*(char *)g_escseq[j].b);
 	if (j == g_escseq_n)
 	{
 		j = 0;

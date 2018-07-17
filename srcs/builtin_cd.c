@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/15 18:03:23 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/05 22:47:59 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/07/06 01:53:16 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	lorp(char ***argv)
 	return (lp);
 }
 
-int	builtin_cd(int argc, char **argv)
+int			builtin_cd(int argc, char **argv)
 {
 	int		acc;
 	char	*name;
@@ -64,7 +64,7 @@ int	builtin_cd(int argc, char **argv)
 	return (0);
 }
 
-int	builtin_pwd(int argc, char **argv)
+int			builtin_pwd(int argc, char **argv)
 {
 	t_opt	opt;
 

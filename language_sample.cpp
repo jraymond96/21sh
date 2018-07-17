@@ -29,7 +29,7 @@ function operator(:)(string:a, [integer]:b)
 	return (result.reverse());
 }
 
-function operator(<<)(&ostream:stream, [primitive]:a)
+function operator(<<)(&ostream:stream, [isprimitive(T)]:a)
 {
 	if (typeof(a) == "char")
 		stream.buffer += a;

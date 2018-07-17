@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strmatchl.c                                     :+:      :+:    :+:   */
+/*   ft_strmatch.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/04/16 16:09:42 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/05/14 18:42:34 by mmerabet         ###   ########.fr       */
+/*   Created: 2018/07/07 16:10:20 by mmerabet          #+#    #+#             */
+/*   Updated: 2018/07/08 17:51:56 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 int	ft_strmatchl(const char *str, const char *match)
 {
-	char	*strl;
+/*	char	*strl;
 	int		ret;
 	int		i;
 
@@ -37,12 +37,13 @@ int	ft_strmatchl(const char *str, const char *match)
 		}
 	}
 	free(strl);
-	return (ret);
+	return (ret);*/
+	return (ft_strmatch_opt(str, match, RGX_BKSLSH));
 }
 
 int	ft_strnmatchl(const char *str, const char *match, int n)
 {
-	char	*strl;
+/*	char	*strl;
 	int		ret;
 	int		i;
 
@@ -64,31 +65,34 @@ int	ft_strnmatchl(const char *str, const char *match, int n)
 		}
 	}
 	free(strl);
-	return (ret);
+	return (ret);*/
+	return (ft_strnmatch_opt(str, match, n, RGX_BKSLSH));
 }
 
 int	ft_strmatch(const char *str, const char *match)
 {
-	int		ret;
+/*	int		ret;
 	t_mchi	*head;
 
 	if (!str || !match || !(head = ft_getmchi(match)))
 		return (0);
-	ret = ft_strtks(str, head);
+	ret = ft_strtks(str, head, 0);
 	ft_delmchi(head);
-	return (ret);
+	return (ret);*/
+	return (ft_strmatch_opt(str, match, 0));
 }
 
 int	ft_strnmatch(const char *str, const char *match, int n)
 {
-	int		ret;
+/*	int		ret;
 	t_mchi	*head;
 
 	if (!str || !match || !(head = ft_getmchi(match)))
 		return (0);
-	ret = ft_strntks(str, head, n);
+	ret = ft_strntks(str, head, n, 0);
 	ft_delmchi(head);
-	return (ret);
+	return (ret);*/
+	return (ft_strnmatch_opt(str, match, n, 0));
 }
 
 int	ft_strmatch_x(const char *a, const char *strset)

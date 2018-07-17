@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 16:27:55 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/05 04:19:36 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/07/06 01:53:38 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static int	getoptions(char ***argv, char ***envp, char ***paths, int *verb)
 	return (0);
 }
 
-int	builtin_env(int argc, char **argv)
+int			builtin_env(int argc, char **argv)
 {
 	char	**envp;
 	char	**paths;

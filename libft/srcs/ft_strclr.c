@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/09 22:22:00 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/04/02 20:48:55 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/07/06 04:42:58 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,4 +30,16 @@ char	*ft_strnclr(char *s, size_t n)
 	if (s)
 		ft_bzero((void *)s, n);
 	return (s);
+}
+
+char	*ft_strend(const char *str)
+{
+	char	*it;
+
+	it = (char *)str;
+	if (!*it)
+		return (it);
+	while (*(it + 1))
+		++it;
+	return (it);
 }

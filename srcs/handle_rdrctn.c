@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/26 16:10:49 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/04 02:32:13 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/07/10 14:53:58 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ t_list			*list_redirections(t_ast **ast)
 		red = (*ast)->parent;
 		while (red != parent)
 		{
-			ft_lstpush_p(&lst, getrdrctn(red));
+			ft_lstpushfront(&lst, getrdrctn(red));
 			red = red->parent;
 		}
 	}

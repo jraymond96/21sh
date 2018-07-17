@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/30 18:40:49 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/05/28 16:13:22 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/07/08 17:41:17 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ static int		checktype(const char **str, t_mchi *cur, t_mchi *nxt, int n)
 	return (2);
 }
 
-int				ft_strntks(const char *str, t_mchi *mchi, int n)
+int				ft_strntks(const char *str, t_mchi *mchi, int n, int option)
 {
 	int		len;
 
@@ -144,6 +144,8 @@ int				ft_strntks(const char *str, t_mchi *mchi, int n)
 		mchi = mchi->next;
 	}
 	if (!*str && mchi && mchi->whatever)
+		return (1);
+	if (*str && !mchi && (option & RGX_END))
 		return (1);
 	return (*str || mchi ? 0 : 1);
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_parsepath.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/07/06 02:04:13 by mmerabet          #+#    #+#             */
+/*   Updated: 2018/07/06 02:04:19 by mmerabet         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "shell.h"
 #include "ft_str.h"
 #include "ft_mem.h"
@@ -46,7 +58,7 @@ char		*ft_parsepath(char *target, char *origin, size_t size)
 	return (origin);
 }
 
-int		ft_chdir(char *target, char *pwd, size_t size, int slink)
+int			ft_chdir(char *target, char *pwd, size_t size, int slink)
 {
 	t_shret		acc;
 	struct stat	st;
@@ -65,7 +77,7 @@ int		ft_chdir(char *target, char *pwd, size_t size, int slink)
 	return (SH_OK);
 }
 
-int		ft_chdirl(char *target, char *pwd, size_t size)
+int			ft_chdirl(char *target, char *pwd, size_t size)
 {
 	return (ft_chdir(target, pwd, size, 0));
 }

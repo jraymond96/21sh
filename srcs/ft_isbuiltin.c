@@ -6,20 +6,21 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:09:06 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/05 22:36:04 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/07/16 17:46:26 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 #include "ft_str.h"
 #include "ft_mem.h"
-#include "ft_printf.h"
 
 static t_builtin	g_builtins[] = {
 	{"cd", builtin_cd}, {"echo", builtin_echo}, {"setenv", builtin_setenv},
 	{"unsetenv", builtin_unsetenv}, {"env", builtin_env},
 	{"exit", builtin_exit}, {"printenv", builtin_printenv},
-	{"history", builtin_history}, {"pwd", builtin_pwd}
+	{"history", builtin_history}, {"pwd", builtin_pwd},
+	{"true", builtin_true}, {"false", builtin_false},
+	{"return", builtin_return}, {"jobs", builtin_jobs},
 };
 
 static size_t		g_builtins_size = sizeof(g_builtins) / sizeof(t_builtin);
@@ -47,7 +48,6 @@ int		execbuiltin(char *name, t_args *args)
 
 	if ((i = isbuiltin(name)) == -1)
 		return (-1);
-	ft_printf("MATCH BUILTIN : %d\n", i);
 	argvp = ft_memdup(args->argv, sizeof(char *) * (args->argc + 1));
 	i = g_builtins[i].func(args->argc, argvp);
 	free(argvp);
