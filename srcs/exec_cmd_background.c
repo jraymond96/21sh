@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/10 17:42:32 by jraymond          #+#    #+#             */
-/*   Updated: 2018/07/17 21:29:37 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/07/18 20:46:01 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,10 @@
 #include "ft_mem.h"
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <signal.h>
 #include <fcntl.h>
-#include <errno.h>
+#include <pthread.h>
 
 static int		g_pid;
 
@@ -96,11 +97,32 @@ void	sign_child(int sign)
 	}
 }
 
+void	*waitstatus(void *x)
+{
+	int	pid;
+	int	b_x;
+	int	status;
+
+	b_x = *(int *)x;
+	pid = g_shell->bgproc[b_x]->pid;
+	while (waitpid(pid, &status, WNOHANG) != pid)
+		;
+//	ft_printf("status 1: %s\n", g_shell->bgproc[b_x]->status);
+	if (WIFEXITED(status) == 1)
+		ft_strcpy(g_shell->bgproc[b_x]->status, "Done");
+	else
+		ft_strcpy(g_shell->bgproc[b_x]->status, "Terminated");
+//	ft_printf("status 2: %s\n", g_shell->bgproc[b_x]->status);
+//	ft_printf("SEGV2\n");
+	pthread_exit(NULL);
+}
+
 int			exec_cmd_background(t_ast *ast, void *res, t_iterf *iterf)
 {
 	pid_t		pid;
 	t_inffork	inf;
 	int			x;
+	pthread_t	a;
 
 	ft_bzero(&inf, sizeof(t_inffork));
 	if ((pid = fork()) == -1)
@@ -119,10 +141,12 @@ int			exec_cmd_background(t_ast *ast, void *res, t_iterf *iterf)
 	else
 	{
 		g_pid = pid;
-		handle_bgproc(pid, ast->left->args->argv);
-		if (signal(SIGCHLD, sign_child) == SIG_ERR)
-			ft_exit(EXIT_FAILURE,
-					"21sh: failed to catch 'SIGINT' signal. Exiting.");
+		x = handle_bgproc(pid, ast->left->args->argv);
+		if (pthread_create(&a, NULL, waitstatus, (void *)&x) != 0)
+			ft_printf_fd(2, "21sh: error pthread_create\n");
+//		if (signal(SIGCHLD, sign_child) == SIG_ERR)
+//			ft_exit(EXIT_FAILURE,
+//					"21sh: failed to catch 'SIGINT' signal. Exiting.");
 		if (signal(SIGINT, sign_test) == SIG_ERR)
 			ft_exit(EXIT_FAILURE,
 					"21sh: failed to catch 'SIGINT' signal. Exiting.");

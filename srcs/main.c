@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 18:40:09 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/17 21:29:40 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/07/18 20:20:03 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,15 +167,15 @@ int			main(int argc, char **argv, char **envp)
 				if ((c = ft_astiter(head, &g_shell->exitcode, &g_shell_iterf)))
 					ft_printf("21sh: %s: [%s]\n", ft_strshret(c), line,
 							(g_shell->exitcode = 1));
-				int	x = -1;
-				while (++x < (MAX_BGPROC - 1))
-				{
-					if (g_shell->bgproc[x])
-						ft_printf("pid: %d status: %s nb: %d\n",
-									g_shell->bgproc[x]->pid,
-									g_shell->bgproc[x]->status,
-									g_shell->bgproc[x]->x);
-				}
+//				int	x = -1;
+//				while (++x < (MAX_BGPROC - 1))
+//				{
+//					if (g_shell->bgproc[x])
+//						ft_printf("pid: %d status: %s nb: %d\n",
+//									g_shell->bgproc[x]->pid,
+//									g_shell->bgproc[x]->status,
+//									g_shell->bgproc[x]->x);
+//				}
 				check_bg();
 				ft_astdel(&head);
 			}
