@@ -76,11 +76,11 @@ static t_op	g_shellerrs[] = {
 	{"dup failed", SH_DUPFAIL},
 	{"fork failed", SH_FORKFAIL},
 	{"exec format error", SH_EXECERR},
-	{"none", SH_NONE},
-	{"limit order number in the background", SH_MAXBGPROC},
-	{"if without then", SH_IFWTHEN},
-	{"then without if", SH_THENWIF},
-	{"else without if", SH_ELSEWIF}
+	{"maximum of background processes reached", SH_MAXBGPROC},
+	{"condition statement without then", SH_CONDWTHEN},
+	{"then without previous condition statement", SH_THENWCOND},
+	{"else without previous condition statement", SH_ELSEWCOND},
+	{"none", SH_NONE}
 };
 static size_t	g_shellerrs_len = (sizeof(g_shellerrs) / sizeof(t_op));
 

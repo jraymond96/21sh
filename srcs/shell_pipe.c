@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/09 20:36:55 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/12 22:38:45 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/07/19 19:42:12 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,34 +57,44 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	*(int *)res >>= 8;
 	return (0);
 }
-/*
-int	shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
-{
-	int		fd[2];
-	int		leftres;
-	pid_t	pidl;
 
-	(void)op;
-	leftres = 0;
-	if (pipe(fd) == -1 && (*(int *)res = 1))
-		return (SH_PIPFAIL);
-	if ((pidl = fork()) == -1)
-		return (SH_FORKFAIL);
-	else if (!pidl)
+int				shell_andor_seco_cb(t_ast *ast, void **op, void *res,
+								t_iterf *iterf)
+{
+	g_shell->exitcode = *(int *)op[0];
+	if (*ast->name == '&')
 	{
-		close(fd[1]);
-		dup2(fd[0], 0);
-		ft_astiter(ast->left, &leftres, iterf);
-		close(fd[0]);
-		exit(0);
+		if (*(int *)op[0] == 0)
+			ft_astiter(ast->right, res, iterf);
+		else
+			*(int *)res = *(int *)op[0];
 	}
-	else
+	else if (*ast->name == '|')
 	{
-		close(fd[0]);
-		dup2(fd[1], 1);
-		ft_astiter(ast->right, res, iterf);
-		close(fd[1]);
-		waitpid(pidl, NULL, 0);
+		if (*(int *)op[0] != 0)
+			ft_astiter(ast->right, res, iterf);
+		else
+			*(int *)res = *(int *)op[0];
+	}
+	else if (*ast->name == ';')
+	{
+		if (ast->right && ast->right->name)
+			*(int *)res = *(int *)op[1];
+		else if (ast->left && ast->left->name)
+			*(int *)res = *(int *)op[0];
 	}
 	return (0);
-}*/
+}
+
+int				shell_bckgrnd_cb(t_ast *ast, void **op, void *res,
+							t_iterf *iterf)
+{
+	(void)iterf;
+	(void)op;
+	if (*ast->name == '&')
+	{
+		if (exec_cmd_background(ast, res, iterf) != 0)
+			return (SH_FORKFAIL);
+	}
+	return (0);
+}

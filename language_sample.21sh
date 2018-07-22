@@ -1,0 +1,12 @@
+{
+	while $[a++ < 10] then {
+		echo "Hello";
+	};
+
+	if $[3] then {
+		if $[4] then
+			echo "Hello world";
+		echo "Inside";
+	};
+	return 45;
+} > file_out

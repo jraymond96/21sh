@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:09:16 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/12 20:36:47 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/07/19 15:56:46 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,15 @@ extern t_shell	*g_shell;
 static void	sign_handler(int sign)
 {
 	(void)sign;
-	if (g_shell->curpid)
-		kill(g_shell->curpid, 1);
+	if (sign == SIGINT)
+	{
+		if (g_shell->curpid)
+			kill(g_shell->curpid, 1);
+	}
+	else if (sign == SIGTSTP)
+	{
+		ft_printf("HANg\n");
+	}
 }
 
 static void	initenvp(char **envp)
@@ -56,6 +63,8 @@ void		shell_begin(char *name, int argc, char **argv, char **envp)
 
 	if (signal(SIGINT, sign_handler) == SIG_ERR)
 		ft_exit(EXIT_FAILURE, "Failed to catch 'SIGINT' signal. Exiting.");
+//	if (signal(SIGTSTP, sign_handler) == SIG_ERR)
+//		ft_exit(EXIT_FAILURE, "Failed to catch 'SIGINT' signal. Exiting.");
 	if (!(g_shell = (t_shell *)ft_memalloc(sizeof(t_shell))))
 		ft_exit(EXIT_FAILURE, "Failed to begin shell. Exiting");
 	g_shell->paths = ft_getpaths(envp);

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/12 18:58:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/12 20:48:59 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/07/18 14:39:23 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,6 @@ int	exp_farg(char *tld, int n[3], void *data, char **res)
 		*res = ft_strdup(tld + 1);
 	else
 		*res = ft_strdupl(tld + 1);
-	ft_printf("res: '%s'\n", *res);
 	tld[n[0] - 1] = sep;
 	return (0);
 	ft_printf("farg expansion %d '%s' %d %d '%c'\n", n[0], tld, n[1], n[2], tld[n[0] - 1]);

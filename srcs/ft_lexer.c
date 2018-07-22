@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/03 06:50:53 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/09 21:29:09 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/07/17 21:58:46 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,12 +125,11 @@ t_ast			*ft_lexer(const char *str, t_lexerf *ldef)
 	cur = NULL;
 	ldef->parserf.data = ldef->data;
 	while (ft_bzero(&inst, sizeof(t_inst))
-			&& (str = ft_parser(str, &inst.args, &ldef->parserf)))
+			&& (pos = ft_parser(&str, &inst.args, &ldef->parserf)) != -1)
 	{
 		if (!*str)
 			inst.delim = NULL;
-		else if ((pos = ft_max(ft_strpbrkstr_len(str, ldef->parserf.def_stop),
-				ft_strpbrkstr_len(str, ldef->parserf.def_hstop))))
+		else if (pos)
 		{
 			inst.delim = ft_strndup(str, pos);
 			str += (pos ? pos : 1);

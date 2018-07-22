@@ -32,7 +32,7 @@ static int	lorp(char ***argv)
 			lp = 0;
 		else if (opt.c == '\0' && (*argv = opt.ptr - 1))
 			break ;
-		else if (ft_printf("cd: bad option: %c\n", opt.c))
+		else if (ft_printf_fd(2, "cd: bad option: %c\n", opt.c))
 			return (-1);
 	}
 	return (lp);
@@ -46,7 +46,7 @@ int			builtin_cd(int argc, char **argv)
 	name = NULL;
 	if (argc == 1
 			&& (acc = ft_chdirl(g_shell->homepwd, g_shell->pwd, 2048)) != SH_OK)
-		return (ft_printf("%s: %s: %s\n",
+		return (ft_printf_fd(2, "%s: %s: %s\n",
 					argv[0], ft_strshret(acc), (g_shell->homepwd) ? 1 : 1));
 	else if (argc > 1)
 	{
@@ -55,7 +55,7 @@ int			builtin_cd(int argc, char **argv)
 		if (ft_strequ((name = argv[0]), "-"))
 			name = ft_getenv("OLDPWD", g_shell->envp);
 		if ((acc = ft_chdir(name, g_shell->pwd, 2048, argc)) != SH_OK)
-			return (ft_printf("cd: %s: %s\n", ft_strshret(acc), name) ? 1 : 1);
+			return (ft_printf_fd(2, "cd: %s: %s\n", ft_strshret(acc), name) ? 1 : 1);
 		if (ft_strequ(argv[0], "-"))
 			ft_printf("%s\n", name);
 	}
@@ -79,7 +79,7 @@ int			builtin_pwd(int argc, char **argv)
 			argc |= (1 << 0);
 		else if (opt.c == 'n')
 			argc |= (1 << 1);
-		else if (ft_printf("pwd: bad option: %c\n", opt.c))
+		else if (ft_printf_fd(2, "pwd: bad option: %c\n", opt.c))
 			return (1);
 	}
 	if (argc & (1 << 0))

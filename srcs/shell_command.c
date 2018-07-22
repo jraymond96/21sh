@@ -6,18 +6,22 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/30 18:18:40 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/16 17:35:44 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/07/19 16:42:58 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 #include "ft_str.h"
 #include "pipe.h"
+#include "ft_printf.h"
+#include "get_next_line.h"
+#include "ft_mem.h"
 #include <sys/stat.h>
+#include <sys/wait.h>
 
 // LE TRUCK QUI GERE LES ERREURS -> ft_getpaths.c
 
-int	is_file(const char *name)
+static int	is_file(const char *name)
 {
 	struct stat	st;
 
@@ -26,7 +30,7 @@ int	is_file(const char *name)
 	return (S_ISREG(st.st_mode));
 }
 
-int	shell_cmd_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
+int			shell_cmd_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 {
 	int		ret;
 	char	buff[1024];
@@ -35,7 +39,7 @@ int	shell_cmd_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	if ((ret = ft_astresolver(ast, (t_expf *)iterf->data)))
 		return ((*(int *)res = 1) ? ret : ret);
 	if ((*(int *)res = execbuiltin(ast->name, ast->args)) != -1)
-		return (0);
+		return (g_shell->running ? 0 : SH_EXIT);
 	if (!ast || !ast->name || !*ast->name)
 		return (0);
 	if ((ret = ft_getfullpath(ast->name, g_shell->paths, buff, 1024)) != SH_OK)
@@ -54,33 +58,67 @@ int	shell_cmd_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	return (0);
 }
 
-int	shell_andor_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
+static int	in_parent(int fd[2], void *res)
 {
-	if (ft_strcmp(ast->name, "&&") == 0)
-	{
-		if (*(int *)op[0] == 0)
-			ft_astiter(ast->right, res, iterf);
-		else
-			*(int *)res = *(int *)op[0];
-	}
-	else
-	{
-		if (*(int *)op[0] != 0)
-			ft_astiter(ast->right, res, iterf);
-		else
-			*(int *)res = *(int *)op[0];
-	}
-	return (0);
+	int		efail;
+	char	*mem;
+
+	wait(NULL);
+	close(fd[1]);
+	get_next_line(fd[0], &mem);
+	ft_memcpy(&efail, mem, sizeof(int));
+	ft_memdel((void **)&mem);
+	get_next_line(fd[0], &mem);
+	ft_memcpy(res, mem, sizeof(int));
+	ft_memdel((void **)&mem);
+	close(fd[0]);
+	return (efail);
 }
 
-int	shell_bckgrnd_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
+static int	lists_subshell(t_ast *head, void *res, t_iterf *iterf)
 {
-	(void)iterf;
-	(void)op;
-	if (*ast->name == '&')
+	pid_t	pid;
+	int		fd[2];
+	int		efail;
+
+	efail = 0;
+	if (pipe(fd) == -1)
+		return (SH_PIPFAIL);
+	if ((pid = fork()) == -1)
+		return (SH_FORKFAIL);
+	else if (!pid)
 	{
-		if (exec_cmd_background(ast, res, iterf) != 0)
-			return (SH_FORKFAIL);
+		efail = ft_astiter(head, res, iterf);
+		close(fd[0]);
+		ft_printf_fd(fd[1], "%.*r\n%.*r", sizeof(int), &efail,
+				sizeof(int), res);
+		close(fd[1]);
+		ft_astdel(&head);
+		exit(0);
 	}
-	return (0);
+	return (in_parent(fd, res));
+}
+
+int			shell_lists_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
+{
+	char	*ptr;
+	char	tmp;
+	int		efail;
+	t_ast	*head;
+
+	(void)op;
+	ptr = ft_strend(ast->name);
+	tmp = *ptr;
+	*ptr = '\0';
+	head = ft_lexer(ast->name + 1, ast->lexerf);
+	*ptr = tmp;
+	efail = 0;
+	if (!head)
+		return (0);
+	if (*ast->name == '{')
+		efail = ft_astiter(head, res, iterf);
+	else
+		efail = lists_subshell(head, res, iterf);
+	ft_astdel(&head);
+	return (efail);
 }

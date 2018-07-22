@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/13 22:49:13 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/03/19 17:52:02 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/07/18 21:44:52 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,8 @@ char				*handler_color(va_list lst, t_printf_params params)
 		params.width = 1;
 	if (params.flags[L_MOD])
 		params.precision = 1;
-	color = ft_strndup(*params.format, pos);
+	if (!(color = ft_strndup(*params.format, pos)))
+		return (NULL);
 	*params.format += pos + 1;
 	tcolor = ft_inner_printf(color, params.pcur).buf;
 	free(color);

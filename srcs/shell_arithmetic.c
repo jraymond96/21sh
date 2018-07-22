@@ -28,6 +28,8 @@ int	shell_arth_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	*epe = ']';
 	if (!val)
 		*(int *)res = 1;
+	else
+		*(int *)res = 0;
 	return (0);
 }
 

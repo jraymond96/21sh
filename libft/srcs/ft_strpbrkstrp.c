@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/10 18:14:39 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/11 15:28:48 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/07/18 12:41:05 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,52 +15,55 @@
 #include "ft_math.h"
 #include <stdarg.h>
 
-int	ft_strpbrkstrp_pos(const char *a, const void *data, size_t size, ...)
+static int	end_va(va_list vp)
 {
-	int	pos;
-	int	len;
-	va_list	vp;
-	size_t	as;
-	size_t	bs;
-
-	if (!data || !a)
-		return (0);
-	va_start(vp, size);
-	as = va_arg(vp, size_t);
-	bs = va_arg(vp, size_t);
 	va_end(vp);
-	pos = -1;
-	while (a[++pos])
-		if ((len = ft_strpbrkstrp_len(&a[pos], data, size, as, bs)))
-			return ((g_iread = len) ? pos : pos);
-	return (-1);
+	return (1);
 }
 
-int	g_iread;
-
-int	ft_strpbrkstrpl_pos(const char *a, const void *data, size_t size, ...)
+int	ft_strpbrkstrp_pos(const char *a, int type, size_t size, ...)
 {
-	int	pos;
-	int	len;
+	int		pos;
+	int		len;
 	va_list	vp;
-	size_t	as;
-	size_t	bs;
 
-	if (!data || !a)
+	if (!a)
 		return (0);
-	va_start(vp, size);
-	as = va_arg(vp, size_t);
-	bs = va_arg(vp, size_t);
-	va_end(vp);
 	pos = -1;
 	len = 0;
 	while (a[++pos])
 	{
+		va_start(vp, size);
 		while (a[pos] == '\\' && ++pos)
-			if (!a[pos] || !a[++pos])
+			if ((!a[pos] || !a[++pos]) && end_va(vp))
 				return (-1);
-		if ((len = ft_strpbrkstrpl_len(&a[pos], data, size, as, bs)))
+		if ((len = ft_strpbrkstrpv_len(&a[pos], type, size, vp)) && end_va(vp))
 			break ;
+		va_end(vp);
+	}
+	g_iread = len;
+	return (len ? pos : -1);
+}
+
+int	ft_strpbrkstrpl_pos(const char *a, int type, size_t size, ...)
+{
+	int		pos;
+	int		len;
+	va_list	vp;
+
+	if (!a)
+		return (0);
+	pos = -1;
+	len = 0;
+	while (a[++pos])
+	{
+		va_start(vp, size);
+		while (a[pos] == '\\' && ++pos)
+			if ((!a[pos] || !a[++pos]) && end_va(vp))
+				return (-1);
+		if ((len = ft_strpbrkstrplv_len(&a[pos], type, size, vp)) && end_va(vp))
+			break ;
+		va_end(vp);
 	}
 	g_iread = len;
 	return (len ? pos : -1);

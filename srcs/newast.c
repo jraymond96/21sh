@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/06 01:28:11 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/06 02:14:20 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/07/18 21:49:32 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ t_ast		*newast(t_inst *inst, int type, t_lexerf *ldef, t_ast *cur)
 	nw->cmd_offset = ldef->cmd_offset;
 	nw->op_offset = ldef->op_offset;
 	nw->data = ldef->data;
+	nw->lexerf = ldef;
 	if (((nw->type = type)) == ldef->op_offset)
 	{
 		nw->name = inst->delim;

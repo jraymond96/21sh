@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/19 18:42:15 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/11 18:23:45 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/07/16 22:34:40 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <stdlib.h>
 # include <wctype.h>
+# include <stdarg.h>
 
 size_t				ft_strlen(const char *s);
 size_t				ft_strlenl(const char *s);
@@ -76,19 +77,27 @@ int					ft_strnpbrkstr_pos(const char *a, const char *strset,
 int					ft_strnpbrkstrl_pos(const char *a, const char *strset,
 									int n);
 int					ft_strpbrkstrp_len(const char *a,
-									const void *data,
+									int type,
 									size_t size,
 									...);
 int					ft_strpbrkstrpl_len(const char *a,
-									const void *data,
+									int type,
 									size_t size,
 									...);
+int					ft_strpbrkstrpv_len(const char *a,
+									int type,
+									size_t size,
+									va_list vp);
+int					ft_strpbrkstrplv_len(const char *a,
+									int type,
+									size_t size,
+									va_list vp);
 int					ft_strpbrkstrp_pos(const char *a,
-									const void *data,
+									int type,
 									size_t size,
 									...);
 int					ft_strpbrkstrpl_pos(const char *a,
-									const void *data,
+									int type,
 									size_t size,
 									...);
 

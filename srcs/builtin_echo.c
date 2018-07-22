@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 16:27:13 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/16 17:35:07 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/07/19 14:35:32 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "ft_mem.h"
 #include "ft_io.h"
 
-static void	goecho(char **argv, int ops, char *sep)
+static void	goecho(char **argv, int ops, char *sep, int fd)
 {
 	char	*l;
 
@@ -23,29 +23,35 @@ static void	goecho(char **argv, int ops, char *sep)
 	{
 		l = NULL;
 		if (ops & (1 << 1))
-			ft_printf("%.*r", ft_strlenk(*argv), (l = ft_strdupk(*argv)));
+			ft_printf_fd(fd, "%.*r", ft_strlenk(*argv),
+					(l = ft_strdupk(*argv)));
 		else
-			ft_putstr(*argv);
+			ft_putstr_fd(*argv, fd);
 		free(l);
 		if (*++argv)
-			ft_putstr(sep);
+			ft_putstr_fd(sep, fd);
 	}
 	if (!(ops & (1 << 0)))
-		ft_putchar('\n');
+		ft_putchar_fd('\n', fd);
 }
 
-static int	checkerror(t_opt *opt, char **argv, int ret)
+static int	checkerror(t_opt *opt, char ***argv, int ret)
 {
 	if (opt->seq == 1)
 	{
 		while (*++opt->cur)
-			if (!ft_strchr("neEc", *opt->cur))
+			if (!ft_strchr("rneEc", *opt->cur))
 				break ;
-		if (*opt->cur && (*argv -= 2))
+		if (*opt->cur && (**argv -= 2))
 			return (0);
 	}
-	else if (opt->cur == 0 && ret == OPT_UNKNOWN)
+	else if (opt->cur == NULL && ret == OPT_UNKNOWN)
 		return (0);
+	else if (ret == OPT_UNKNOWN)
+	{
+		--*argv;
+		return (0);
+	}
 	return (1);
 }
 
@@ -58,9 +64,9 @@ int			builtin_echo(int argc, char **argv)
 	++argv;
 	ops = 0;
 	sep = " ";
-	while ((argc = ft_getopt(&argv, "neEc.1", &opt)) != OPT_END)
+	while ((argc = ft_getopt(&argv, "rneEc.1", &opt)) != OPT_END)
 	{
-		if (!checkerror(&opt, argv, argc))
+		if (!checkerror(&opt, &argv, argc))
 			break ;
 		if (opt.c == 'n')
 			ops |= (1 << 0);
@@ -68,9 +74,11 @@ int			builtin_echo(int argc, char **argv)
 			ops |= (1 << 1);
 		else if (opt.c == 'E')
 			ops &= (~(1 << 1));
+		else if (opt.c == 'r')
+			ops |= (1 << 2);
 		else if (opt.c == 'c' && opt.n == 1)
 			sep = *opt.ptr;
 	}
-	goecho(argv, ops, sep);
+	goecho(argv, ops, sep, (ops & (1 << 2) ? 2 : 1));
 	return (0);
 }

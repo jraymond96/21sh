@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/15 16:37:58 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/11 20:49:30 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/07/18 12:56:00 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int			ft_resolver(t_args *args, int onlyfirst)
 	return (0);
 }
 */
-#include "ft_printf.h"
+
 int			strexpand2(const char **origin, char **res, t_expf *expf, int n[4])
 {
 	int		t;
@@ -114,8 +114,8 @@ int			strexpand1(const char *origin, char **res, int i, t_expf *expf)
 	n[2] = i;
 	while (*origin && (!n[1] || !expf->onlyfirst))
 	{
-		n[3] = ft_strpbrkstrp_pos(origin, (void *)expf->expansions, expf->len,
-			sizeof(t_exp), 0);
+		n[3] = ft_strpbrkstrp_pos(origin, 0, expf->len,
+				(void *)expf->expansions, sizeof(t_exp), 0);
 		if (n[3] != -1 && expf->expansions[g_ifound].chan != g_ichan)
 			n[3] = g_iread;
 		n[0] = g_iread;

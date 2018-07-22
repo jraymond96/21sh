@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/18 20:46:03 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/07/19 21:03:21 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,24 @@
 # include <stdarg.h>
 # include "ft_list.h"
 
-# define DLM_REDS "<<:>>:*[0-9]>>:<:>:>&*[0-9]:>&-"
+# define DLM_REDS "<<:>>:*[0-9]>>:<:>:*[<>@=1]&*[0-9]:>&-:*[0-9]*[<>@=1]&:*[<>@=1]&"
 # define DLM_REDP DLM_REDS ":*[0-9]*[<>@=1]&-:*[0-9]*[<>@=1]&*[0-9]:*[0-9]*[<>]"
 # define DLM_REDT "<<:>>:*[<>@=1]&:<:>"
 
-# define EXP_VAR "$*[aA0_-zZ9_]"
-# define EXP_CMD "*[`?`;\";';$'*'@b]"
-# define EXP_FARG "\"*\":'*':$'*'"
-# define EXP_ARTH "$((*))"
-# define EXP_TILD "~"
+# define EXP_BRACES "*[{?};(?);\"*\";'*'@b]"
+# define EXP_SUBSHELL "*[(?);{?};\"*\";'*'@b]"
 
-# define DLM_WORD " :\t"
-# define DLM_HSTOP "&:&&:||:<<:>>:*[<>|;@=1]:>&*[0-9]:>&-"
-# define DLM_STOP1 "if:then:else:not:*[0-9]>>:*[0-9]*[<>@=1]&*[0-9]"
+# define DLM_WORD " :\t:\n"
+# define DLM_HSTOP "&:&&:||:<<:>>:*[<>|;@=1]:>&-:>&"
+
+# define DLM_LSTOP "*[<>@=1]&*[0-9]"
+# define DLM_RSTOP "*[0-9]*[<>@=1]:*[0-9]*[<>@=1]&-:*[0-9]*[<>@=1]&:*[0-9]>>"
+# define DLM_STOP "while:if:then:else:not:*[0-9]*[<>@=1]&*[0-9]"
+
+/*
+# define DLM_STOP1 "if:then:else:not:*[0-9]>>:*[0-9]*[<>@=1]&*[0-9]:>&*[0-9]"
 # define DLM_STOP DLM_STOP1 ":*[0-9]*[<>@=1]&-:*[0-9]*[<>@=1]"
-
+*/
 # define EXPR_DLM_VARV "*[aA_-zZ_@=1]*[aA0_-zZ9_]:*[aA_-zZ_@=1]"
 # define EXPR_DLM_VAR "*[0-9]*[aA_-zZ_]:" EXPR_DLM_VARV
 # define EXPR_DLM_EQU "*[+\\-*/%&|^@=1]=:="
@@ -42,9 +45,10 @@
 
 typedef enum	e_shret
 {
-	SH_ADENIED, SH_NFOUND, SH_NEXIST, SH_OK, SH_NONE, SH_EFAIL, SH_ESUCCESS,
-	SH_NDIR, SH_PIPFAIL, SH_DUPFAIL, SH_FORKFAIL, SH_EXECERR, SH_MAXBGPROC,
-	SH_NFILE, SH_IFWTHEN, SH_THENWIF, SH_ELSEWIF, SH_EXPRERR,
+	SH_EXIT, SH_ADENIED, SH_NFOUND, SH_NEXIST, SH_OK, SH_NONE, SH_EFAIL,
+	SH_ESUCCESS, SH_NDIR, SH_PIPFAIL, SH_DUPFAIL, SH_FORKFAIL, SH_EXECERR,
+	SH_MAXBGPROC, SH_NFILE, SH_CONDWTHEN, SH_THENWCOND, SH_ELSEWCOND,
+	SH_EXPRERR,
 	TK_CMD, TK_OP, TK_REDIR, TK_PIPE, TK_ANDOR, TK_SEMICOLON,
 	TK_LEFT, TK_RIGHT, TK_LLEFT, TK_LRIGHT
 }				t_shret;
@@ -107,6 +111,7 @@ typedef struct		s_shell
 	pid_t			curpid;
 	int				exitcode;
 	t_inffork		*bgproc[MAX_BGPROC];
+	unsigned int		c : 1;
 }					t_shell;
 
 typedef struct		s_opt
@@ -144,52 +149,12 @@ typedef struct		s_expf
 	int				num_chan;
 }					t_expf;
 
-typedef struct		s_args
-{
-	int				argc;
-	char			**argv;
-	t_exp			*exps;
-	size_t			exps_len;
-	void			*data;
-	char			*exp_all;
-}					t_args;
-
-typedef struct		s_ast
-{
-	int				type;
-	char			*name;
-	t_args			*args;
-	int				assoc;
-	int				u;
-	int				cmd_offset;
-	int				op_offset;
-	void			*extra_param;
-	void			*data;
-	struct s_ast	*parent;
-	struct s_ast	*left;
-	struct s_ast	*right;
-}					t_ast;
-
-typedef struct		s_inst
-{
-	t_args			args;
-	char			*delim;
-	char			*str;
-}					t_inst;
-
-typedef struct		s_rdrctn
-{
-	int				type;
-	int				fd_out;
-	int				fd_in;
-	t_args			*names;
-	char			*str;
-}					t_rdrctn;
-
 typedef struct		s_parserf
 {
 	char			*def_word;
 	char			*def_stop;
+	char			*def_lstop;
+	char			*def_rstop;
 	char			*def_hstop;
 	t_exp			*exps;
 	size_t			exps_len;
@@ -221,6 +186,48 @@ typedef struct		s_lexerf
 	int				op_offset;
 	void			*data;
 }					t_lexerf;
+
+typedef struct		s_args
+{
+	int				argc;
+	char			**argv;
+	void			*data;
+	t_parserf		*parserf;
+}					t_args;
+
+typedef struct		s_ast
+{
+	int				type;
+	char			*name;
+	t_args			*args;
+	int				assoc;
+	int				u;
+	int				cmd_offset;
+	int				op_offset;
+	void			*extra_param;
+	void			*data;
+	t_lexerf		*lexerf;
+	struct s_ast	*parent;
+	struct s_ast	*left;
+	struct s_ast	*right;
+}					t_ast;
+
+typedef struct		s_inst
+{
+	t_args			args;
+	char			*delim;
+	char			*str;
+}					t_inst;
+
+typedef struct		s_redir
+{
+	int				type;
+	int				fd_out;
+	int				fd_in;
+	int				replace_fd;
+	t_args			*names;
+	char			*str;
+}					t_redir;
 
 typedef struct s_iterf	t_iterf;
 
@@ -255,7 +262,9 @@ int					shell_cmd_cb(t_ast *ast, void **op, void *res,
 								t_iterf *iterf);
 int					shell_arth_cb(t_ast *ast, void **op, void *res,
 								t_iterf *iterf);
-int					shell_andor_cb(t_ast *ast, void **op, void *res,
+int					shell_lists_cb(t_ast *ast, void **op, void *res,
+								t_iterf *iterf);
+int					shell_andor_seco_cb(t_ast *ast, void **op, void *res,
 								t_iterf *iterf);
 int					shell_bckgrnd_cb(t_ast *ast, void **op, void *res,
 								t_iterf *iterf);
@@ -268,7 +277,7 @@ int					shell_cond_cb(t_ast *ast, void **op, void *res,
 int					shell_else_cb(t_ast *ast, void **op, void *res,
 								t_iterf *iterf);
 
-char				*ft_parser(const char *str, t_args *args, t_parserf *pdef);
+int					ft_parser(const char **str, t_args *args, t_parserf *pdef);
 void				ft_argsdel(t_args *args);
 
 t_ast				*ft_lexer(const char *str, t_lexerf *ldef);
@@ -417,6 +426,7 @@ int					expr_tern_cb(t_ast *ast, void **op, void *res,
 
 int		exec_cmd_background(t_ast *ast, void *res, t_iterf *iterf);
 int		handle_bgstat(pid_t pid, int status);
-void	check_bg(void);
+void	check_bgend(void);
+int		end_status(char *str);
 
 #endif

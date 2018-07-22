@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/22 20:49:13 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/12 20:53:13 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/07/18 20:14:18 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 #include "ft_types.h"
 #include "ft_math.h"
 #include "ft_printf.h"
-
-int					g_exprerr;
 
 static t_exp		g_exps[] = {
 	{"*[(*);\"?\";'?'@b]:(*[@>0]", NULL, 0},
@@ -42,7 +40,7 @@ static t_op			g_ops[] = {
 static t_lexerf		g_arithmetic_lexer = {
 	{
 		" :\t",
-		"",
+		"", "", "",
 		",:<<:>>:<<=:>>=:++:--:*[*@=2]:&&:||:>=:<=:==:!=:"
 		"*[+\\-*/%&|^@=1]=:*[+\\-*%/<>=&|^!~?\\:@=1]:@",
 		g_exps, sizeof(g_exps) / sizeof(t_exp), NULL, NULL, NULL
@@ -140,7 +138,6 @@ int					ft_vexpr(const char *expr, EXPRT *res,
 	va_copy(data->vp, vp);
 	g_arithmetic_lexer.data = (void *)data;
 	ast = ft_lexer(expr, &g_arithmetic_lexer);
-	ft_astprint(ast, 0);
 	++data->expr_lvl;
 	efail = ft_astiter(ast, res, &g_arithmetic_iter);
 	--data->expr_lvl;

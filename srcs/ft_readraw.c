@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/12 18:44:03 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/04/27 13:36:13 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/07/19 17:45:46 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ int			ft_readraw(char *line, size_t size)
 			moveline(line, &cursor, 0, size);
 		else if (c == '\033')
 			movecursor(line, &cursor);
-		else
+		else if (ft_isprint(c))
 		{
 			ft_putchar(c == '\t' ? ' ' : (char)c);
 			if (line[cursor] != '\0')

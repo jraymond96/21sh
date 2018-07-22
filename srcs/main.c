@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 18:40:09 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/18 20:20:03 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/07/19 21:03:20 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static t_op			g_ops[] = {
 	{"&", OP_BINARY | OP_ASSOCRL},
 	{"|", OP_BINARY},
 	{"&&:||", OP_BINARY},
-	{"if", OP_UNARYL},
+	{"if:while", OP_UNARYL},
 	{"then", OP_BINARY},
 	{"else", OP_BINARY},
 	{";", OP_BINARY}
@@ -42,7 +42,10 @@ static t_exp		g_exps[] = {
 	{"*[`?`;\";';$'?'@b]", exp_cmd, 0},
 	{"*[\"*\"@b]:'*':$'*'", exp_farg, 0},
 	{"*[\"'@=1]*[@>0]:$'*[@>0]:\":':$'", exp_farg, 0},
-	{"*[$\\[*\\];\"*\";'*'@b]", exp_cond, 0}
+	{"*[$\\[*\\];\"*\";'*'@b]", exp_cond, 0},
+
+	{EXP_BRACES, NULL, 0},
+	{EXP_SUBSHELL, NULL, 0}
 };
 
 static t_expf		g_expf = {
@@ -51,8 +54,8 @@ static t_expf		g_expf = {
 
 static t_lexerf		g_lexerf = {
 	{
-		DLM_WORD, DLM_STOP, DLM_HSTOP, g_exps, sizeof(g_exps) / sizeof(t_exp),
-		NULL, NULL, NULL
+		DLM_WORD, DLM_STOP, DLM_LSTOP, DLM_RSTOP, DLM_HSTOP,
+		g_exps, sizeof(g_exps) / sizeof(t_exp), NULL, NULL, NULL
 	}, g_ops, sizeof(g_ops) / sizeof(t_op), TK_CMD, TK_OP, NULL
 };
 
@@ -67,16 +70,17 @@ static t_astfunc	g_shell_callbacks[] = {
 		2: les deux, mais d'abord le gauche puie le droit.
 		L'utilite: Par exemple pour les operateurs '&& et ||' seulement le fils gauche
 		doit etre appele et le fils droit est appelle sous certaine conditions,
-		donc on specifie -1. Pour l'exemple on va specifie 2
-		Regarde le fichier ft_expr.c pour en voir une vraie utilisation complete
+		donc on specifie -1.
 	*/
+	{EXP_BRACES, shell_lists_cb, NULL, 3},
+	{EXP_SUBSHELL, shell_lists_cb, NULL, 3},
 	{"*[$\\[*\\];\"*\";'*'@b]", shell_arth_cb, NULL, 3},
 	{"", shell_cmd_cb, NULL, 3},
 	{"if:then", NULL, shell_cond_cb, 0},
 	{"else:not", shell_else_cb, shell_else_cb, -1},
-	{"&&:||", shell_andor_cb, NULL, -1},
+	{"&&:||", shell_andor_seco_cb, NULL, -1},
 	{"&", NULL, shell_bckgrnd_cb, 0},
-	{";", NULL, NULL, 2},
+	{";", NULL, shell_andor_seco_cb, 2},
 	{"|", NULL, shell_pipe_cb, 0},
 	{DLM_REDP, NULL, shell_redir_cb, 0},
 };
@@ -91,7 +95,8 @@ static t_iterf		g_shell_iterf = {
 
 void	printprompt(int i)
 {
-	int	x;
+	int		x;
+	char	*start_pwd;
 
 	if (i)
 	{
@@ -99,57 +104,31 @@ void	printprompt(int i)
 		if (x > 1)
 			ft_printf("%{invert}%%%{0}\n");
 	}
-	ft_printf("%{0}%{bold}%S%{0} %{lred}%s %{lcyan}%s%{0} %{bold}%S%{0} ",
-			L"㋜", g_shell->user, g_shell->pwd, L"∴");
+	start_pwd = NULL;
+	if (ft_strstr_pos(g_shell->pwd, g_shell->homepwd) == 0)
+		start_pwd = g_shell->pwd + ft_strlen(g_shell->homepwd);
+	ft_printf("%{0}%{bold}%S%{0} %{lred}%s %{lcyan}%s%s%{0} %{bold}%S%{0} ",
+			L"㋜", g_shell->user, (start_pwd ? "~" : ""),
+			(start_pwd ? start_pwd : g_shell->pwd), L"∴");
 }
-
+#include <fcntl.h>
 int			main(int argc, char **argv, char **envp)
 {
-/*	char	*res = NULL;
-	int		err;
-
-	shell_begin("21sh", argc, argv, envp);
-	ft_printf("expansion: '%s'\n", argv[1]);
-	if ((err = ft_strexpand(argv[1], &res, 0, &g_expf)))
-		ft_printf("err: %d\n", err);
-	ft_printf("'%s' -> '%s'\n", argv[1], res);
-	free(res);
-	return (0);
-	t_exprdata	expr_data;
-	EXPRT		res = 0;
-	int			efail;
-	char		*tmp;
-	char		**var_db;
-
-	ft_bzero(&expr_data, sizeof(t_exprdata));
-	expr_data.vp_limit = 5;
-	var_db = NULL;
-	expr_data.var_db = &var_db;
-	ft_setenv("A", "0", expr_data.var_db);
-	ft_setenv("B", "10", expr_data.var_db);
-	ft_setenv("LLONG_MAX", (tmp = ft_lltoa(LLONG_MAX)), expr_data.var_db);
-	free(tmp);
-	ft_setenv("LLONG_MIN", (tmp = ft_lltoa(LLONG_MIN)), expr_data.var_db);
-	free(tmp);
-	ft_setenv("STR", "Hello", expr_data.var_db);
-
-	envp = *expr_data.var_db;
-	while (*envp)
-		ft_printf("envp before expr: '%s'\n", *envp++);
-	ft_printf("\n");
-	if ((efail = ft_expr(argv[1], &res, &expr_data, 0, 1, 2, 3, 4)))
-		ft_printf("error detected: %d: %s\n", efail, ft_exprerr(efail));
-	ft_printf("expr: (%s) = %lld\n\n", argv[1], res);
-	envp = *expr_data.var_db;
-	while (*envp)
-		ft_printf("envp after expr: '%s'\n", *envp++);
-	ft_delenv(expr_data.var_db);
-	return (0);
-*/	char	line[8192];
+	t_ast	*head;
+	char	line[8192];
 	int		c;
+	char	*source_code = NULL;
+	int		fd = open(argv[1], O_RDONLY);
 
 	shell_begin("21sh", argc, argv, envp);
-//	ft_bzero(g_shell->bgproc, (sizeof(t_inffork *) * MAX_BGPROC)); // bzero pour le tableau de proc en backgrd
+	get_next_delimstr(fd, "\n\n\n\nEOFEOF\n\n\n\n", &source_code);
+	head = ft_lexer(source_code, &g_lexerf);
+//	ft_astprint(head, 0);
+	if ((c = ft_astiter(head, &g_shell->exitcode, &g_shell_iterf)))
+		ft_printf("21sh: %s: [%s]\n", ft_strshret(c), line,
+				(g_shell->exitcode = 1));
+	ft_astdel(&head);
+	free(source_code);
 	ft_bzero(line, 8192);
 	c = 0;
 	while (g_shell->running)
@@ -161,7 +140,7 @@ int			main(int argc, char **argv, char **envp)
 				ft_strcpy(ft_strclr(line), "exit");
 			if (c != 3)
 			{
-				t_ast	*head = ft_lexer(line, &g_lexerf);
+				head = ft_lexer(line, &g_lexerf);
 //				ft_astprint(head, 0);
 				(void)g_shell_iterf;
 				if ((c = ft_astiter(head, &g_shell->exitcode, &g_shell_iterf)))
@@ -176,7 +155,7 @@ int			main(int argc, char **argv, char **envp)
 //									g_shell->bgproc[x]->status,
 //									g_shell->bgproc[x]->x);
 //				}
-				check_bg();
+				check_bgend();
 				ft_astdel(&head);
 			}
 			if (c != 3 && c != 4)

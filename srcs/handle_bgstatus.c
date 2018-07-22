@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 13:31:39 by jraymond          #+#    #+#             */
-/*   Updated: 2018/07/18 20:46:04 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/07/19 20:04:09 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,27 +40,6 @@ int			end_status(char *str)
 	return (-1);
 }
 
-void					check_bg(void)
-{
-	size_t	x;
-	int		y;
-
-	x = -1;
-	while (++x < (MAX_BGPROC - 1))
-	{
-		if (g_shell->bgproc[x] && end_status(g_shell->bgproc[x]->status) != -1)
-		{
-			ft_printf("[%d]  %c %s", g_shell->bgproc[x]->x,
-						g_shell->bgproc[x]->sign, g_shell->bgproc[x]->status);
-			y = -1;
-			while (g_shell->bgproc[x]->cmd[++y])
-				ft_printf(" %s", g_shell->bgproc[x]->cmd[y]);
-			ft_putchar('\n');
-			ft_delenv(&g_shell->bgproc[x]->cmd);
-			ft_memdel((void **)&g_shell->bgproc[x]);
-		}
-	}
-}
 
 int						handle_bgstat(pid_t pid, int status)
 {

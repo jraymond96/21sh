@@ -6,7 +6,7 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/07/18 20:36:26 by jraymond         ###   ########.fr        #
+#    Updated: 2018/07/19 16:42:07 by mmerabet         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ LIBFT		=	$(LIBFTD)/libft.a
 
 _NTS	=		main.c \
 				ft_readraw.c ft_parser.c ft_lexer.c ft_astiter.c ft_resolver.c ft_getopt.c \
-				ft_astdel.c newast.c \
+				ft_argsdel.c ft_astdel.c newast.c \
 				ft_env.c ft_env2.c ft_getcursor.c ft_exec.c ft_isbuiltin.c ft_getpaths.c \
 				ft_parsepath.c handle_rdrctn.c history.c \
 				builtins.c builtin_cd.c builtin_echo.c builtin_setenv.c \
@@ -28,7 +28,7 @@ _NTS	=		main.c \
 				shell_expansions.c shell_pipe.c shell_arithmetic.c shell_condition.c \
 				shell_command.c shell_redir.c \
 				ft_expr.c expr_callbacks.c expr_callbacks2.c expr_func.c \
-				exec_cmd_background.c builtin_jobs.c handle_bgstatus.c\
+				exec_cmd_background.c builtin_jobs.c handle_bgstatus.c check_bgend.c\
 
 SRCD		=	srcs/
 ICLD		=	-Iincludes -I$(LIBFTD)/includes
