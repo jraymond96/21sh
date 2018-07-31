@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/19 16:04:49 by jraymond          #+#    #+#             */
-/*   Updated: 2018/07/30 16:56:44 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/07/31 22:26:41 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,14 @@
 #include "ft_mem.h"
 #include "ft_io.h"
 
-void	print_cmd_args(char **tab)
+static	void	del(void *content, size_t size)
+{
+	(void)size;
+	ft_delenv(&((t_inffork *)content)->cmd);
+	ft_memdel(&content);
+}
+
+void			print_cmd_args(char **tab)
 {
 	int	x;
 
@@ -29,7 +36,7 @@ void	print_cmd_args(char **tab)
 		ft_printf(" %s\n", tab[x]);
 }
 
-void	print_cmd_args2(char **tab)
+void			print_cmd_args2(char **tab)
 {
 	int	x;
 
@@ -44,26 +51,26 @@ void	print_cmd_args2(char **tab)
 		ft_printf("%s\n", tab[x]);
 }
 
-void					check_bgend(void)
+void			check_bgend(void)
 {
-	size_t	x;
+	t_list		*elem;
+	t_inffork	*struc;
 
-	x = -1;
-	while (++x < (MAX_BGPROC - 1))
+	elem = g_shell->bgproc;
+	while (elem)
 	{
-		if (g_shell->bgproc[x] && end_status(g_shell->bgproc[x]->status) != -1)
+		struc = elem->content;
+		if (end_status(struc->status) != -1)
 		{
-			if (!*g_shell->bgproc[x]->cmd)
-				ft_printf("[%d]  %c %s\n", g_shell->bgproc[x]->x,
-							g_shell->bgproc[x]->sign,
-							g_shell->bgproc[x]->status);
+			if (!*struc->cmd)
+				ft_printf("[%d]  %c %s\n", struc->x, struc->sign, 
+							struc->status);
 			else
-				ft_printf("[%d]  %c %s", g_shell->bgproc[x]->x,
-							g_shell->bgproc[x]->sign,
-							g_shell->bgproc[x]->status);
-			print_cmd_args(g_shell->bgproc[x]->cmd);
-			ft_delenv(&g_shell->bgproc[x]->cmd);
-			ft_memdel((void **)&g_shell->bgproc[x]);
+				ft_printf("[%d]  %c %s", struc->x, struc->sign,
+							struc->status);
+			print_cmd_args(struc->cmd);
+			ft_lstdelone(&elem, del);
 		}
+		elem = elem->next;
 	}
 }

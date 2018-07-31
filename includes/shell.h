@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/30 21:53:37 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/07/31 22:28:03 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ typedef enum	e_shret
 	SH_NONE, SH_EXIT, SH_ADENIED, SH_NFOUND, SH_NEXIST, SH_OK, SH_EFAIL,
 	SH_ESUCCESS, SH_NDIR, SH_PIPFAIL, SH_DUPFAIL, SH_FORKFAIL, SH_EXECERR,
 	SH_MAXBGPROC, SH_NFILE, SH_CONDWTHEN, SH_THENWCOND, SH_ELSEWCOND,
-	SH_EXPRERR, SH_MALLOC
+	SH_EXPRERR, SH_MALLOC,
 	TK_CMD, TK_OP, TK_REDIR, TK_PIPE, TK_ANDOR, TK_SEMICOLON,
 	TK_LEFT, TK_RIGHT, TK_LLEFT, TK_LRIGHT
 }				t_shret;
@@ -109,7 +109,6 @@ typedef struct		s_shell
 	pid_t			curpid;
 	int				exitcode;
 	t_list			*bgproc;
-	pid_t			lpidchange;
 	char			*script;
 }					t_shell;
 
@@ -430,15 +429,14 @@ int					expr_tern_cb(t_ast *ast, void **op, void *res,
 									t_iterf *iterf);
 
 int		exec_cmd_background(t_ast *ast, void *res, t_iterf *iterf);
-int		exec_bltin_bin(t_ast *ast, void *res, t_iterf *iterf);
-int		handle_bgstat(pid_t pid, int status);
-int		handle_bgproc(pid_t pid_fork, char **cmd);
+int		exec_btin_bin(t_ast *ast, void *res, t_iterf *iterf);
+int		handle_bgstat(pid_t pid, int status); // OK;
+int		handle_bgproc(pid_t pid_fork, char **cmd, int status); // OK;
 void	check_bgend(void);
-int		end_status(char *str);
-int		deli_shiftend(int del, int size);
+int		end_status(char *str)ear
 void	print_cmd_args(char **tab);
 void	print_cmd_args2(char **tab);
 char	**ret_args(t_ast *ast);
-t_ast	**ret_astargs(t_ast *ast);
+t_ast	*ret_astargs(t_ast *ast);
 
 #endif

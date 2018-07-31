@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/10 17:42:32 by jraymond          #+#    #+#             */
-/*   Updated: 2018/07/30 21:53:33 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/07/31 22:26:44 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "ft_io.h"
 #include "ft_str.h"
 #include "ft_mem.h"
+#include "ft_list.h"
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -22,7 +23,7 @@
 
 static int		g_pid;
 
-int				error_bgproc(int i)
+static	int		error_bgproc(int i)
 {
 	if (i == 0)
 		ft_printf_fd(2, "21sh: %s (%d)\n",
@@ -30,53 +31,51 @@ int				error_bgproc(int i)
 	else if (i == 1)
 		ft_exitf(EXIT_FAILURE, "21sh: Error Malloc\n");
 	else if (i == 2)
-		ft_exitf(EXIT_FAILURE, "21sh: Error Setpgid\n")
+		ft_exitf(EXIT_FAILURE, "21sh: Error Setpgid\n");
 	return (-1);
 }
 
-t_inffork	*init_infproc(int x, pid_t pid, char **cmd)
+static	void	sign_child(int sign)
 {
-	t_inffork	*new;
+	t_list	*elem;
+	pid_t	pid;
+	int		ret;
 
-	if (!(new = (t_inffork *)ft_memalloc(sizeof(t_inffork))))
-		return (NULL);
-	new->x = x;
-	new->pid = pid;
-	new->cmd = ft_copyenv(cmd);
-	new->sign = ' ';
-	return (new);
-}
-
-
-
-static void	sign_handler(int sign)
-{
-	if (sign == SIGCHLD)
+	elem = g_shell->bgproc;
+	while (elem)
 	{
-		if (WIFSTOPPED(g_status))
-			handle_bgstat(g_shell->lpidchange, BG_STOP);
-		else if (WIFCONTINUED(g_status))
-			handle_bgstat(g_shell->lpidchange, BG_RUN);
-		else if (!WIFEXITED(g_status))
-			handle_bgstat(g_shell->lpidchange, BG_KILL);
-		else if (WIFEXITED(g_status))
-			handle_bgstat(g_shell->lpidchange, BG_END);
+		pid = ((t_inffork *)elem->content)->pid;
+		if (sign == SIGCHLD && waitpid(pid, &ret, WNOHANG) == pid)
+		{
+			if (WIFSTOPPED(ret))
+				handle_bgstat(pid, BG_STOP);
+			else if (WIFCONTINUED(ret))
+				handle_bgstat(pid, BG_RUN);
+			else if (!WIFEXITED(ret))
+				handle_bgstat(pid, BG_KILL);
+			else if (WIFEXITED(ret))
+				handle_bgstat(pid, BG_END);
+			else
+				ft_printf("PROBLEME NIVEAU SIGN_HANDLER\n"); // A retirer
+		}
+		elem = elem->next;
 	}
 }
 
-int			exec_cmd_background(t_ast *ast, void *res, t_iterf *iterf)
+int				exec_cmd_background(t_ast *ast, void *res, t_iterf *iterf)
 {
 	pid_t		pid;
 	t_inffork	inf;
-	int			x;
 	char		**args;
+	t_list		*elem;
 
 	ft_bzero(&inf, sizeof(t_inffork));
 	if ((pid = fork()) == -1)
 		return (SH_FORKFAIL);
 	if (!pid)
 	{
-		if (setpgid(getpid(), 0) == -1)
+		pid = getpid();
+		if (setpgid(pid, 0) == -1)
 			error_bgproc(2);
 		if (ast->left->args->argv[0][0] == '(')
 		{
@@ -84,17 +83,17 @@ int			exec_cmd_background(t_ast *ast, void *res, t_iterf *iterf)
 				return (0);
 		}
 		args = ret_args(ast);
-		pid = getpid();
-		if ((x = handle_bgproc(pid, args)) == -1)
+		if (handle_bgproc(pid, args, BG_RUN) == -1)
 			exit(126);
-		ft_printf("[%d] %d\n", g_shell->bgproc[x]->x, pid);
+		elem = ft_lstend(g_shell->bgproc);
+		ft_printf("[%d] %d\n", ((t_inffork *)elem->content)->x, pid);
 		exec_btin_bin(ret_astargs(ast), res, iterf);
 		exit(126);
 	}
 	else
 	{
 		g_pid = pid;
-		handle_bgproc(pid, ret_args(ast));
+		handle_bgproc(pid, ret_args(ast), BG_RUN);
 		signal(SIGCHLD, sign_child);
 		ft_astiter(ast->right, res, iterf);
 	}

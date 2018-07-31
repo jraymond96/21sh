@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/19 18:39:12 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/30 21:53:51 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/07/31 17:14:12 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 typedef int	(*t_cmpfunc)(const void *, const void *, size_t);
 
 # endif
-
 # ifndef FT_DELFUNC_T
 #  define FT_DELFUNC_T
 

@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/16 17:15:39 by jraymond          #+#    #+#             */
-/*   Updated: 2018/07/23 19:26:50 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/07/31 22:26:40 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,54 +14,57 @@
 #include "shell.h"
 #include "ft_types.h"
 
-void	jobs_print(int i)
+static void		jobs_print(t_list *elem)
 {
 	int	x;
 
-	ft_printf("[%d]%c %s ", g_shell->bgproc[i]->x,
-					g_shell->bgproc[i]->sign,
-					g_shell->bgproc[i]->status);
+	ft_printf("[%d]%c %s ", ((t_inffork *)elem->content)->x,
+					((t_inffork *)elem->content)->sign,
+					((t_inffork *)elem->content)->status);
 	x = -1;
-	while (g_shell->bgproc[i]->cmd[++x])
-		ft_printf("\t\t%s", g_shell->bgproc[i]->cmd[x]);
+	while (((t_inffork *)elem->content)->cmd[++x])
+		ft_printf("\t\t%s", ((t_inffork *)elem->content)->cmd[x]);
 	ft_putchar('\n');
 }
 
-int		onebg_ask(char **argv)
+static	int		error_jobs(char **argv, int error)
 {
-	int	i;
-	int	numbg;
+	if (!error)
+		ft_printf("21sh: jobs: %s: no such job\n", argv[1]);
+	return (-1);
+}
 
-	i = -1;
-	numbg = ft_atoi(argv[1]);
-	while (++i < (MAX_BGPROC - 1) && g_shell->bgproc[i]->x != numbg)
+static	int		if_args(char **argv, int numprocbg)
+{
+	int		x;
+	t_list	*elem;
+
+	x = -1;
+	elem = g_shell->bgproc;
+	while (argv[1][++x] && ft_isdigit(argv[1][x]))
 		;
-	if (i == (MAX_BGPROC - 1))
-	{
-		ft_printf("jobs: job not found: %d\n", numbg);
-		return (-1);
-	}
-	else
-		jobs_print(i);
+	if (argv[1][x] || numprocbg < 1)
+		return (error_jobs(argv, 0));
+	while (elem && ((t_inffork *)elem->content)->x != numprocbg)
+		elem = elem->next;
+	if (!elem)
+		return (error_jobs(argv, 0));
+	jobs_print(elem);
 	return (0);
 }
 
-int		builtin_jobs(int argc, char **argv)
+int				builtin_jobs(int argc, char **argv)
 {
-	int	i;
-	int	numbg;
+	t_list	*elem;
 
-	i = -1;
-	if (argc == 2 && (numbg = ft_atoi(argv[1])))
-		return (onebg_ask(argv));
-	else
+	if (!(elem = g_shell->bgproc))
+		return (0);
+	if (argc > 1)
+		return (if_args(argv, ft_atoi(argv[1])));
+	while (elem)
 	{
-		i = -1;
-		while (++i < (MAX_BGPROC - 1))
-		{
-			if (g_shell->bgproc[i])
-				jobs_print(i);
-		}
+		jobs_print(elem);
+		elem = elem->next;
 	}
 	return (0);
 }
