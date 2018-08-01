@@ -6,11 +6,24 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/19 16:57:08 by mmerabet          #+#    #+#             */
-/*   Updated: 2017/12/19 19:58:06 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/08/01 22:18:21 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_list.h"
+
+t_list	*ft_lstextract(t_list **alst, t_list *node)
+{
+	if (!node)
+		return (node);
+	if (node->parent)
+		node->parent->next = node->next;
+	else
+		*alst = node->next;
+	if (node->next)
+		node->next->parent = node->parent;
+	return (node);
+}
 
 t_list	*ft_lsterase(t_list **alst,
 					const void *content,

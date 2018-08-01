@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/10 17:42:32 by jraymond          #+#    #+#             */
-/*   Updated: 2018/07/31 22:26:44 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/08/01 22:59:14 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,10 @@ static	void	sign_child(int sign)
 		if (sign == SIGCHLD && waitpid(pid, &ret, WNOHANG) == pid)
 		{
 			if (WIFSTOPPED(ret))
+			{
 				handle_bgstat(pid, BG_STOP);
+				handle_bgsign(elem, 0);
+			}
 			else if (WIFCONTINUED(ret))
 				handle_bgstat(pid, BG_RUN);
 			else if (!WIFEXITED(ret))
@@ -56,7 +59,7 @@ static	void	sign_child(int sign)
 			else if (WIFEXITED(ret))
 				handle_bgstat(pid, BG_END);
 			else
-				ft_printf("PROBLEME NIVEAU SIGN_HANDLER\n"); // A retirer
+				ft_printf("Sign not\n"); // A retirer
 		}
 		elem = elem->next;
 	}

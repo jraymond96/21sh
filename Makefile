@@ -6,7 +6,7 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/07/31 22:27:56 by jraymond         ###   ########.fr        #
+#    Updated: 2018/08/01 18:37:10 by jraymond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ _NTS	=		main.c \
 				shell_command.c shell_redir.c \
 				ft_expr.c expr_callbacks.c expr_callbacks2.c expr_func.c \
 				exec_cmd_background.c handle_bgstatus.c check_bgend.c\
-				info_bg.c ret_astargs.c exec_btin_bin.c \
+				info_bg.c ret_astargs.c exec_btin_bin.c handle_bgsign.c \
 
 SRCD		=	srcs/
 ICLD		=	-Iincludes -I$(LIBFTD)/includes

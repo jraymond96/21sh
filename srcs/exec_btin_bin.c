@@ -6,10 +6,11 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/30 16:37:15 by jraymond          #+#    #+#             */
-/*   Updated: 2018/07/31 22:15:04 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/08/01 14:35:17 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "shell.h"
 #include <unistd.h>
 #include <sys/stat.h>
 

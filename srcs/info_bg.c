@@ -6,12 +6,13 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/30 16:40:15 by jraymond          #+#    #+#             */
-/*   Updated: 2018/07/31 22:27:26 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/08/01 18:10:23 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 #include "ft_list.h"
+#include "ft_io.h"
 #include "ft_mem.h"
 
 static	t_inffork	*init_infproc(int x, pid_t pid, char **cmd)
@@ -49,7 +50,7 @@ int					nbproc_inbg(t_list *b_list)
 		b_list = b_list->next;
 	if (x >= MAX_BGPROC)
 	{
-		ft_printf_fd(2, "21sh: %s (%d)", ft_strchret(SH_MAXBGPROC),
+		ft_printf_fd(2, "21sh: %s (%d)", ft_strshret(SH_MAXBGPROC),
 						MAX_BGPROC);
 		return (-1);
 	}
@@ -64,15 +65,16 @@ int					handle_bgproc(pid_t  pid_fork, char **cmd, int status)
 	t_inffork	*new;
 	int			ret;
 
-	if ((ret = nbproc_inbg(new)) == -1)
+	if ((ret = nbproc_inbg(g_shell->bgproc)) == -1)
 		return (-1);
-	numproc = ret == 0 ? 0 : ++numproc;
+	numproc = ret == 0 ? 1 : ++numproc;
 	new = init_infproc(numproc, pid_fork, cmd);
 	elem = init_t_list(new, sizeof(t_inffork));
 	if (!g_shell->bgproc)
 		g_shell->bgproc = elem;
 	else
 		ft_lstpush(g_shell->bgproc, elem);
+	handle_bgsign(elem, 0);
 	handle_bgstat(pid_fork, status);
-	return (x);
+	return (0);
 }

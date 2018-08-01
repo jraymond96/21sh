@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/19 16:04:49 by jraymond          #+#    #+#             */
-/*   Updated: 2018/07/31 22:26:41 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/08/01 21:37:27 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,33 @@ void			print_cmd_args2(char **tab)
 		ft_printf("%s\n", tab[x]);
 }
 
+t_list			*delete_info(t_list *elem)
+{
+	int		i;
+	t_list	*save;
+	t_list	*b_list;
+
+	i = -1;
+	save = elem->next;
+	b_list = g_shell->bgproc;
+/*	if (!elem->parent)
+	{
+		i = 0;
+		if (elem->next)
+			g_shell->bgproc = elem->next;
+		else
+			g_shell->bgproc = NULL;
+	}
+	else
+		elem->parent->next = elem->next;*/
+	ft_lstextract(&g_shell->bgproc, elem);
+	ft_lstdelone(&elem, del);
+	if (i == 0)
+		return (g_shell->bgproc);
+	else
+		return (save);
+}
+
 void			check_bgend(void)
 {
 	t_list		*elem;
@@ -69,8 +96,10 @@ void			check_bgend(void)
 				ft_printf("[%d]  %c %s", struc->x, struc->sign,
 							struc->status);
 			print_cmd_args(struc->cmd);
-			ft_lstdelone(&elem, del);
+			handle_bgsign(elem, 1);
+			elem = delete_info(elem);
 		}
-		elem = elem->next;
+		else
+			elem = elem->next;
 	}
 }

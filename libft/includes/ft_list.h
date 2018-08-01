@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/19 18:39:12 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/31 17:14:12 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/08/01 21:34:30 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ t_list				*ft_lsterasem(t_list **alst,
 							const void *content,
 							size_t pstart,
 							size_t plen);
+t_list				*ft_lstextract(t_list **alst, t_list *node);
 
 /*
 ** Return a linked list storing all removed nodes containing 'content' from the

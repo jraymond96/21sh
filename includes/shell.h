@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/31 22:28:03 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/08/01 22:59:20 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ typedef struct		s_shell
 	pid_t			curpid;
 	int				exitcode;
 	t_list			*bgproc;
+	t_list			*lstmodif_pid;
 	char			*script;
 }					t_shell;
 
@@ -433,10 +434,11 @@ int		exec_btin_bin(t_ast *ast, void *res, t_iterf *iterf);
 int		handle_bgstat(pid_t pid, int status); // OK;
 int		handle_bgproc(pid_t pid_fork, char **cmd, int status); // OK;
 void	check_bgend(void);
-int		end_status(char *str)ear
+int		end_status(char *str);
 void	print_cmd_args(char **tab);
 void	print_cmd_args2(char **tab);
 char	**ret_args(t_ast *ast);
 t_ast	*ret_astargs(t_ast *ast);
+void	handle_bgsign(t_list *elem, int opt);
 
 #endif

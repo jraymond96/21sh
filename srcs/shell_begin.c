@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:09:16 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/31 17:48:08 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/08/01 22:59:17 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,6 @@ static void	sign_handler(int sign)
 			kill(g_shell->curpid, 1);
 		if (g_shell->script)
 			exit(0);
-	}
-	else if (sign == SIGTSTP)
-	{
-		if (g_shell->curpid)
-			kill(g_shell->curpid, SIGTSTP);
-// a voir pour le cas ou on fait ctrl z sans avoir deja fais une mise en bg du process
 	}
 }
 
@@ -66,7 +60,6 @@ int			shell_begin(char *name, int argc, char **argv, char **envp)
 	char	*tmp;
 
 	signal(SIGINT, sign_handler);
-	signal(SIGTSTP, sign_handler);
 	if (!(g_shell = (t_shell *)ft_memalloc(sizeof(t_shell))))
 		ft_exit(EXIT_FAILURE, "Failed to begin shell. Exiting\n");
 	g_shell->paths = ft_getpaths(envp);
