@@ -17,6 +17,9 @@ CFLAGS		=	-Wall -Werror -Wextra -g3 -fsanitize=address
 LIBFTD		=	libft
 LIBFT		=	$(LIBFTD)/libft.a
 
+LOGGERD		=	logger
+LOGGER		=	$(LOGGERD)/liblogger.a
+
 _NTS	=		main.c \
 				ft_readraw.c ft_parser.c ft_lexer.c ft_astiter.c ft_resolver.c ft_getopt.c \
 				ft_argsdel.c ft_astdel.c newast.c \
@@ -52,17 +55,23 @@ CEND=\033[0m
 
 all: 
 	@$(MAKE) lib
+	@$(MAKE) log
 	@$(MAKE) $(NAME)
 
-$(NAME): $(LIBFT) $(OBJB)
+$(NAME): $(LIBFT) $(LOGGER) $(OBJB)
 	@printf "\r\033[K$(CGREEN)Creating executable$(CEND): $(NAME)\n"
-	@$(CC) $(CFLAGS) $(OBJB) $(LIBFT) $(FRAMEWORKS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJB) $(LIBFT) $(LOGGER) $(FRAMEWORKS) -o $(NAME)
 	@echo  "$(NAME): $(CGREEN)done$(CEND)"
 
-$(LIBFT):;
+$(LIBFT):
 
 lib:
 	@make -C $(LIBFTD)
+
+$(LOGGER):
+
+log:
+	@make -C $(LOGGERD)
 
 $(OBJD)%.o: $(SRCD)%.c includes/shell.h includes/pipe.h Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $@"
@@ -71,11 +80,13 @@ $(OBJD)%.o: $(SRCD)%.c includes/shell.h includes/pipe.h Makefile
 
 clean:
 	@make -C $(LIBFTD) clean
+	@make -C $(LOGGERD) clean
 	@echo "$(CRED)Cleaning$(CEND): $(NAME)"
 	@rm -f $(OBJB)
 
 fclean: clean
 	@make -C $(LIBFTD) fclean
+	@make -C $(LOGGERD) fclean
 	@echo "$(CRED)Full cleaning$(CEND): $(NAME)"
 	@/bin/rm -f $(NAME)
 
@@ -83,4 +94,4 @@ re:
 	@make fclean
 	@make
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re 

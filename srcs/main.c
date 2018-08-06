@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "/Users/jeremi/21sh/logger/incs/logger.h"
+
 #include "ft_io.h"
 #include "ft_str.h"
 #include "ft_mem.h"
@@ -118,7 +120,14 @@ int			main(int argc, char **argv, char **envp)
 	t_ast	*head;
 	char	line[8192];
 	int		c;
-	
+
+if (logger_init(D_TRACE, "/tmp/out.log") != 0)
+	{
+		ft_printf("failed to open the logger\n");
+		exit(-1);
+	}
+	signal(SIGTTOU, SIG_IGN);
+	signal(SIGTTIN, SIG_IGN);
 	shell_begin(argv[0], argc, argv, envp);
 	if (g_shell->script)
 	{
@@ -155,5 +164,6 @@ int			main(int argc, char **argv, char **envp)
 		}
 	}
 	ft_makeraw(0);
+	logger_close();
 	return (shell_end());
 }

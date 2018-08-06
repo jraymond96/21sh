@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "/Users/jeremi/21sh/logger/incs/logger.h"
+
 #include "shell.h"
 #include "ft_str.h"
 #include "ft_mem.h"
@@ -28,7 +30,10 @@ static void	sign_handler(int sign)
 	if (sign == SIGINT)
 	{
 		if (g_shell->curpid)
+		{
+			log_trace("Pid_killed: %d\n", g_shell->curpid);
 			kill(g_shell->curpid, 1);
+		}
 		if (g_shell->script)
 			exit(0);
 	}

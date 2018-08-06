@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "/Users/jeremi/21sh/logger/incs/logger.h"
+
 #include "shell.h"
 #include "ft_io.h"
 #include "ft_str.h"
@@ -47,12 +49,12 @@ static	void	sign_child(int sign)
 		pid = ((t_inffork *)elem->content)->pid;
 		if (sign == SIGCHLD && waitpid(pid, &ret, WNOHANG) == pid)
 		{
-			if (WIFSTOPPED(ret))
-			{
-				handle_bgstat(pid, BG_STOP);
-				handle_bgsign(elem, 0);
-			}
-			else if (WIFCONTINUED(ret))
+//			if (WIFSTOPPED(ret))
+//			{
+//				handle_bgstat(pid, BG_STOP);
+//				handle_bgsign(elem, 0);
+//			}
+			if (WIFCONTINUED(ret))
 				handle_bgstat(pid, BG_RUN);
 			else if (!WIFEXITED(ret))
 				handle_bgstat(pid, BG_KILL);
@@ -77,9 +79,11 @@ int				exec_cmd_background(t_ast *ast, void *res, t_iterf *iterf)
 		return (SH_FORKFAIL);
 	if (!pid)
 	{
+		signal(SIGINT, SIG_DFL);
 		pid = getpid();
 		if (setpgid(pid, 0) == -1)
 			error_bgproc(2);
+		log_trace("PID_S: %d | PGRP_S: %d\n", getpid(), getpgrp());
 		if (ast->left->args->argv[0][0] == '(')
 		{
 			ft_printf("Handle &> (...)\n");
@@ -96,6 +100,7 @@ int				exec_cmd_background(t_ast *ast, void *res, t_iterf *iterf)
 	else
 	{
 		g_pid = pid;
+		log_trace("PID_F: %d | PGRP_F: %d\n", getpid(), getpgrp());
 		handle_bgproc(pid, ret_args(ast), BG_RUN);
 		signal(SIGCHLD, sign_child);
 		ft_astiter(ast->right, res, iterf);

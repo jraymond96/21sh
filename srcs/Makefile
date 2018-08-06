@@ -15,7 +15,9 @@ CC			=	gcc
 CFLAGS		=	-Wall -Werror -Wextra -g3 -fsanitize=address
 
 LIBFTD		=	libft
+LOGGERFTD	=	logger
 LIBFT		=	$(LIBFTD)/libft.a
+LOGGER		=	$(LOGGERFTD)/libbloger.a
 
 _NTS	=		main.c \
 				ft_readraw.c ft_parser.c ft_lexer.c ft_astiter.c ft_resolver.c ft_getopt.c \
@@ -53,10 +55,15 @@ all:
 	@$(MAKE) lib
 	@$(MAKE) $(NAME)
 
-$(NAME): $(LIBFT) $(OBJB)
+$(NAME): $(LIBFT) $(LOGGER) $(OBJB)
 	@printf "\r\033[K$(CGREEN)Creating executable$(CEND): $(NAME)\n"
-	@$(CC) $(CFLAGS) $(OBJB) $(LIBFT) $(FRAMEWORKS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJB) $(LIBFT) $(LOGGER) $(FRAMEWORKS) -o $(NAME)
 	@echo  "$(NAME): $(CGREEN)done$(CEND)"
+
+$(LOGGER):
+
+loger:
+	@make -C $(LOGGERFTD)
 
 $(LIBFT):;
 

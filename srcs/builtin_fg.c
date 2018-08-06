@@ -10,6 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "/Users/jeremi/21sh/logger/incs/logger.h"
+#include <errno.h>
+
 #include "shell.h"
 #include "ft_io.h"
 #include "ft_mem.h"
@@ -17,6 +20,7 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <signal.h>
+#include <fcntl.h>
 
 static	t_list		*error_fg(char **argv, int i)
 {
@@ -59,26 +63,37 @@ static	t_list		*check_args(int argc, char **argv, int numprocbg)
 
 int					builtin_fg(int argc, char **argv)
 {
-	pid_t	save;
 	t_list	*elem;
+	int		ret;
+	int		status;
 
-	save = g_shell->curpid;
 	if (!(elem = check_args(argc, argv, ft_atoi(argv[1]))))
 		return (-1);
 	else
 	{
 		print_cmd_args2(((t_inffork *)elem->content)->cmd);
-		g_shell->curpid = ((t_inffork *)elem->content)->pid;
 		if (((t_inffork *)elem->content)->status[0] == 'S')
 			kill(((t_inffork *)elem->content)->pid, SIGCONT);
-		tcsetpgrp(0, ((t_inffork *)elem->content)->pid);
-		if (waitpid(((t_inffork *)elem->content)->pid, NULL, WUNTRACED) == -1)
+		log_trace("PID_+-fg: %d | CURPID: %d\n",
+					((t_inffork *)elem->content)->pid, getpid());
+		log_trace("ret_tcset1: %d | PGRP_FD_0: %d\n",
+						tcsetpgrp(0, ((t_inffork *)elem->content)->pid),
+						getpgid(((t_inffork *)elem->content)->pid));
+		if (waitpid(((t_inffork *)elem->content)->pid, &status, WUNTRACED) == -1)
 		{
-			ft_printf_fd(2, "21sh: fg: waitpid failed\n");
-			return (-1);
+			ret = tcsetpgrp(0, getpgrp());
+			ft_printf_fd(2, "21sh: waitpid: %s | ret: %d\n", strerror(errno), ret);
 		}
-		g_shell->curpid = save;
-		tcsetpgrp(0, save);
+		else
+		{
+			if (WIFSTOPPED(status))
+			{
+				handle_bgstat(((t_inffork *)elem->content)->pid, BG_STOP);
+				handle_bgsign(elem, 0);
+			}
+			log_trace("ret_tcset2: %d | PGRP_FD_0: %d\n",
+						tcsetpgrp(0, getpgid(0)), getpgrp());
+		}
 	}
 	return (0);
 }
