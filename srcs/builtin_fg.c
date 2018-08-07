@@ -6,11 +6,11 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/25 16:03:52 by jraymond          #+#    #+#             */
-/*   Updated: 2018/08/01 22:59:16 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/08/07 15:17:14 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "/Users/jeremi/21sh/logger/incs/logger.h"
+#include "../logger/incs/logger.h"
 #include <errno.h>
 
 #include "shell.h"
@@ -80,10 +80,8 @@ int					builtin_fg(int argc, char **argv)
 						tcsetpgrp(0, ((t_inffork *)elem->content)->pid),
 						getpgid(((t_inffork *)elem->content)->pid));
 		if (waitpid(((t_inffork *)elem->content)->pid, &status, WUNTRACED) == -1)
-		{
 			ret = tcsetpgrp(0, getpgrp());
-			ft_printf_fd(2, "21sh: waitpid: %s | ret: %d\n", strerror(errno), ret);
-		}
+//			ft_printf_fd(2, "21sh: waitpid: %s | ret: %d\n", strerror(errno), ret);
 		else
 		{
 			if (WIFSTOPPED(status))

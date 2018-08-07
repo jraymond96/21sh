@@ -1,0 +1,31 @@
+ls
+gcc main.c -o 1
+./1 &
+jobs
+fg
+jobs
+fg
+ls
+jobs
+exit
+./1 &
+fg
+=ls
+ls
+jobs
+fg
+kill 31282
+jobs
+clear
+exit
+clear
+ls -la
+./1	&
+jobs
+fg
+jobs
+fg
+jobs
+./1 &
+fg
+exit

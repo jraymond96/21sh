@@ -6,11 +6,11 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/10 17:42:32 by jraymond          #+#    #+#             */
-/*   Updated: 2018/08/01 22:59:14 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/08/07 15:17:16 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "/Users/jeremi/21sh/logger/incs/logger.h"
+#include "../logger/incs/logger.h"
 
 #include "shell.h"
 #include "ft_io.h"

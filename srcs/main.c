@@ -6,11 +6,11 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 18:40:09 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/26 16:43:06 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/08/07 14:11:53 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "/Users/jeremi/21sh/logger/incs/logger.h"
+#include "../logger/incs/logger.h"
 
 #include "ft_io.h"
 #include "ft_str.h"
