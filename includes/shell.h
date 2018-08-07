@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 21:39:46 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/08/01 22:59:20 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/08/07 18:28:18 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ typedef struct		s_inffork
 	char			sign;
 	char			status[100];
 	char			**cmd;
+	unsigned int	modif : 1;
 }					t_inffork;
 
 typedef struct		s_shell
@@ -370,6 +371,7 @@ int					builtin_true(int argc, char **argv);
 int					builtin_false(int argc, char **argv);
 int					builtin_jobs(int argc, char **argv);
 int					builtin_fg(int argc, char **argv);
+int					builtin_bg(int argc, char **argv);
 
 extern int			g_dontfree;
 extern t_shell		*g_shell;

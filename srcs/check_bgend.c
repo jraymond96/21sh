@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/19 16:04:49 by jraymond          #+#    #+#             */
-/*   Updated: 2018/08/01 21:37:27 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/08/07 18:28:26 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,20 @@ void			check_bgend(void)
 			print_cmd_args(struc->cmd);
 			handle_bgsign(elem, 1);
 			elem = delete_info(elem);
+		}
+		else if (struc->modif & (1 << 0))
+		{
+			if (!*struc->cmd)
+				ft_printf("[%d]  %c %s\n", struc->x, struc->sign, 
+							struc->status);
+			else
+				ft_printf("[%d]  %c %s", struc->x, struc->sign,
+							struc->status);
+			print_cmd_args(struc->cmd);
+
+			handle_bgsign(elem, 1);
+			elem = elem->next;
+			struc->modif &= (0 << 0);
 		}
 		else
 			elem = elem->next;

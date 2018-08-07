@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 13:31:39 by jraymond          #+#    #+#             */
-/*   Updated: 2018/08/01 17:55:16 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/08/07 18:47:41 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ int					handle_bgstat(pid_t pid, int status)
 
 	i = -1;
 	elem = g_shell->bgproc;
+	if (((t_inffork *)elem->content)->status[0])
+		((t_inffork *)elem->content)->modif |= (1 << 0);
 	while (elem && ((t_inffork *)elem->content)->pid != pid)
 		elem = elem->next;
 	while (++i < g_bgstats_size)

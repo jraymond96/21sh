@@ -6,7 +6,7 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/08/07 14:01:58 by jraymond         ###   ########.fr        #
+#    Updated: 2018/08/07 17:38:10 by jraymond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ _NTS	=		main.c \
 				ft_env.c ft_env2.c ft_getcursor.c ft_exec.c ft_isbuiltin.c ft_getpaths.c \
 				ft_parsepath.c handle_rdrctn.c history.c \
 				builtins.c builtin_cd.c builtin_echo.c builtin_setenv.c \
-				builtin_bool.c builtin_env.c builtin_jobs.c builtin_fg.c \
+				builtin_bool.c builtin_env.c builtin_jobs.c builtin_fg.c builtin_bg.c\
 				shell_init.c shell_begin.c \
 				shell_expansions.c shell_pipe.c shell_arithmetic.c shell_condition.c \
 				shell_command.c shell_redir.c \

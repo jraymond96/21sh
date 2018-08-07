@@ -32,3 +32,64 @@ exit
 ./1 &
 fg
 exit
+fg
+bg
+./1 &
+fg
+jobs
+bg 1
+fg
+jobs
+fg
+jobs
+clear
+exit
+./1 &
+jobs
+fg
+jobs
+bg 1
+bg
+jobs
+fg
+jobs
+bg
+fg
+jobs
+clear
+jobs
+ps -j
+exit
+./1 &
+jobs
+fg
+jobs
+bg
+jobs
+fg
+clear
+exit
+./1 &
+fg
+jobs
+bg
+jobs
+fg
+clear
+exit
+./1 &
+fg
+jobs
+bg
+jobs
+fg
+clear
+exit
+./1 &
+fg
+exit
+./1 &
+fg
+bg
+fg
+exit
