@@ -29,3 +29,6 @@ jobs
 ./1 &
 fg
 exit
+./1 &
+fg
+exit

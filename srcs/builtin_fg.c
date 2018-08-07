@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/25 16:03:52 by jraymond          #+#    #+#             */
-/*   Updated: 2018/08/07 15:17:14 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/08/07 16:16:44 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ int					builtin_fg(int argc, char **argv)
 						getpgid(((t_inffork *)elem->content)->pid));
 		if (waitpid(((t_inffork *)elem->content)->pid, &status, WUNTRACED) == -1)
 			ret = tcsetpgrp(0, getpgrp());
-//			ft_printf_fd(2, "21sh: waitpid: %s | ret: %d\n", strerror(errno), ret);
 		else
 		{
 			if (WIFSTOPPED(status))
