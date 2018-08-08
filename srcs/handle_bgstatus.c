@@ -47,10 +47,10 @@ int					handle_bgstat(pid_t pid, int status)
 
 	i = -1;
 	elem = g_shell->bgproc;
-	if (((t_inffork *)elem->content)->status[0])
-		((t_inffork *)elem->content)->modif |= (1 << 0);
 	while (elem && ((t_inffork *)elem->content)->pid != pid)
 		elem = elem->next;
+	if (((t_inffork *)elem->content)->status[0])
+		((t_inffork *)elem->content)->modif |= (1 << 0);
 	while (++i < g_bgstats_size)
 	{
 		if (status == g_bgstat[i].status)

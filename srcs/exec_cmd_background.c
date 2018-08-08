@@ -78,7 +78,6 @@ int				exec_cmd_background(t_ast *ast, void *res, t_iterf *iterf)
 		pid = getpid();
 		if (setpgid(pid, 0) == -1)
 			error_bgproc(2);
-		log_trace("PID_S: %d | PGRP_S: %d\n", getpid(), getpgrp());
 		if (ast->left->args->argv[0][0] == '(')
 		{
 			ft_printf("Handle &> (...)\n");
@@ -95,7 +94,6 @@ int				exec_cmd_background(t_ast *ast, void *res, t_iterf *iterf)
 	else
 	{
 		g_pid = pid;
-		log_trace("PID_F: %d | PGRP_F: %d\n", getpid(), getpgrp());
 		handle_bgproc(pid, ret_args(ast), BG_RUN);
 		signal(SIGCHLD, sign_child);
 		ft_astiter(ast->right, res, iterf);

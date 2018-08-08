@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../logger/incs/logger.h"
+
 #include "shell.h"
 #include "ft_list.h"
 #include "ft_io.h"
@@ -74,6 +76,7 @@ int					handle_bgproc(pid_t  pid_fork, char **cmd, int status)
 		g_shell->bgproc = elem;
 	else
 		ft_lstpush(g_shell->bgproc, elem);
+	if (getpid() != pid_fork)
 	handle_bgsign(elem, 0);
 	handle_bgstat(pid_fork, status);
 	return (0);

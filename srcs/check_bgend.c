@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../logger/incs/logger.h"
+
 #include "shell.h"
 #include "ft_mem.h"
 #include "ft_io.h"
@@ -89,6 +91,7 @@ void			check_bgend(void)
 				ft_printf("[%d]  %c %s", struc->x, struc->sign,
 							struc->status);
 			print_cmd_args(struc->cmd);
+			log_trace("supression du bg [%d]\n", struc->pid);
 			handle_bgsign(elem, 1);
 			elem = delete_info(elem);
 		}
@@ -101,8 +104,7 @@ void			check_bgend(void)
 				ft_printf("[%d]  %c %s", struc->x, struc->sign,
 							struc->status);
 			print_cmd_args(struc->cmd);
-
-			handle_bgsign(elem, 1);
+			log_trace("Modif du status bg [%d]\n", struc->pid);
 			elem = elem->next;
 			struc->modif &= (0 << 0);
 		}

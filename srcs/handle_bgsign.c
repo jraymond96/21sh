@@ -11,9 +11,13 @@
 /* ************************************************************************** */
 
 /*
-** set and update global : g_shell->lstmodif_pid;
+** handle value g_shell->lastmodif_pid;
 ** handle sign + and - for the background;
+** opt true => the bg is finish;
+** opt false => the bg are new sign +;
 */
+
+#include "../logger/incs/logger.h"
 
 #include "shell.h"
 #include "ft_printf.h"
@@ -56,15 +60,17 @@ static	int		no_opt(t_list *elem)
 	{
 		if (((t_inffork *)lst->content)->sign == '+' && lst != elem)
 		{
-			((t_inffork *)elem->content)->sign = '+';
 			if ((ret = ret_sign(0)))
 				((t_inffork *)ret->content)->sign = ' ';
 			((t_inffork *)lst->content)->sign = '-';
+			((t_inffork *)elem->content)->sign = '+';
 			g_shell->lstmodif_pid = elem;
 			return (0);
 		}
 		else if (lst == elem && ((t_inffork *)lst->content)->sign == '+')
+		{
 			return (0);
+		}
 		lst = lst->next;
 	}
 	return (0);
@@ -89,9 +95,9 @@ static	int		withopt(t_list *elem)
 			return (0);
 		((t_inffork *)lst->content)->sign = '+';
 		 g_shell->lstmodif_pid = lst;
-		if (lst->parent)
+		if (lst->parent && ((t_inffork *)lst->parent->content)->sign != '-')
 			((t_inffork *)lst->parent->content)->sign = '-';
-		else if (lst->next)
+		else if (lst->next && ((t_inffork *)lst->next->content)->sign != '-')
 			((t_inffork *)lst->next->content)->sign = '-';
 	}
 	return (0);

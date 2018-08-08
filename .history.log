@@ -138,3 +138,91 @@ jobs
 exit
 ./1 &
 exit
+clear
+cat main.c
+ls
+gcc main.c -o 1
+./1 &
+fg
+exit
+./1 &
+jobs
+fg
+fg 1
+fg
+jobs
+fg 2
+exit
+clear
+./1 &
+jobs
+fg 1
+fg 2
+sl
+ls
+exit
+clear
+./1 &
+fg 1
+fg 2
+clear
+exit
+./1 &
+jobs
+fg 1
+fg 2
+exit
+./1 &
+fg 1
+fg 2
+exit
+clear
+./1 &
+jobs
+fg
+fg 1
+fg 2
+exit
+./1 &
+fg 1
+fg 2
+exit
+./1 &
+jobs
+./1 &
+jobs
+fg
+jobs
+bg
+jobq
+jobs
+fg 1
+jobs
+bg
+jobs
+fg 3
+jobs
+bg
+fg 2
+jobs
+fg
+jobs
+fg 1
+clear
+exit
+./1 &
+jobs
+fg
+jobs
+fg
+clear
+jobs
+./1 &
+jobs
+fg
+bg
+fg
+bg
+fg
+clear
+exit
