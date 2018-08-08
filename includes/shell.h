@@ -442,5 +442,7 @@ void	print_cmd_args2(char **tab);
 char	**ret_args(t_ast *ast);
 t_ast	*ret_astargs(t_ast *ast);
 void	handle_bgsign(t_list *elem, int opt);
+void	freelst_bg(void);
+void	del(void *content, size_t size);
 
 #endif

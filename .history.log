@@ -93,3 +93,48 @@ fg
 bg
 fg
 exit
+./1 &
+ls
+jobs
+vim main.c
+ls -la
+gcc main.c -o 1
+./1 &
+fg
+bg
+ls
+ps
+exit
+ls -la
+exit
+./1 &
+jobs
+./1 &
+jobs
+./1 &
+jobs
+exit
+./1 &
+jobs
+./1 &
+jobs
+kill 86720
+jobs
+kill 86719
+jobs
+exit
+./1 &
+jobs
+./1 &
+jobs
+exit
+./1 &
+jobs
+./1 &
+jobs
+kill 86873
+kill 86871
+jobs
+exit
+./1 &
+exit

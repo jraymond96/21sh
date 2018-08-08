@@ -86,10 +86,7 @@ static	int		withopt(t_list *elem)
 	else if (c == '+')
 	{
 		if (!(lst = ret_sign(0)))
-		{
-			ft_printf("PAS DE SIGN '-' \n");
 			return (0);
-		}
 		((t_inffork *)lst->content)->sign = '+';
 		 g_shell->lstmodif_pid = lst;
 		if (lst->parent)

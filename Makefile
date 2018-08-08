@@ -12,7 +12,7 @@
 
 NAME		=	21sh
 CC			=	gcc
-CFLAGS		=	-Wall -Werror -Wextra -g3 -fsanitize=address
+CFLAGS		=	-Wall -Werror -Wextra
 
 LIBFTD		=	libft
 LIBFT		=	$(LIBFTD)/libft.a
@@ -32,7 +32,7 @@ _NTS	=		main.c \
 				shell_command.c shell_redir.c \
 				ft_expr.c expr_callbacks.c expr_callbacks2.c expr_func.c \
 				exec_cmd_background.c handle_bgstatus.c check_bgend.c\
-				info_bg.c ret_astargs.c exec_btin_bin.c handle_bgsign.c \
+				info_bg.c ret_astargs.c exec_btin_bin.c handle_bgsign.c freelst_bg.c\
 
 SRCD		=	srcs/
 ICLD		=	-Iincludes -I$(LIBFTD)/includes

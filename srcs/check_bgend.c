@@ -14,13 +14,6 @@
 #include "ft_mem.h"
 #include "ft_io.h"
 
-static	void	del(void *content, size_t size)
-{
-	(void)size;
-	ft_delenv(&((t_inffork *)content)->cmd);
-	ft_memdel(&content);
-}
-
 void			print_cmd_args(char **tab)
 {
 	int	x;

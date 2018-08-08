@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../logger/incs/logger.h"
+
 #include "shell.h"
 #include "ft_str.h"
 #include "pipe.h"
@@ -40,6 +42,7 @@ int			shell_cmd_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		return (0);
 	if ((*(int *)res = execbuiltin(ast->cname, ast->cargs)) != -1)
 		return (g_shell->running ? 0 : SH_EXIT);
+	log_trace("ret_execbuiltin: %d\n", res);
 	if ((ret = ft_getfullpath(ast->cname, g_shell->paths, buff, 1024)) != SH_OK)
 	{
 		ft_printshret(ret, ast->cname);

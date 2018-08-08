@@ -20,6 +20,8 @@
 int			builtin_exit(int argc, char **argv)
 {
 	g_shell->running = 0;
+	//bash kill pas les process bg si il est exit, peut le faire facilement
+	freelst_bg();
 	if (argc > 1)
 		return ((int)ft_atoui(argv[1]));
 	return (g_shell->exitcode);
