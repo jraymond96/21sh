@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/07 16:47:10 by jraymond          #+#    #+#             */
-/*   Updated: 2018/08/07 18:47:43 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/08/17 14:18:00 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,17 +51,17 @@ static	t_list		*check_args(int argc, char **argv, int numprocbg)
 	if (elem && (((t_inffork *)elem->content)->status[0] != 'K' ||
 				((t_inffork *)elem->content)->status[0] != 'D'))
 		return (elem);
-	else
-		return (error_bg(argv, 0));
+	return (error_bg(argv, 0));
 }
 
-int		builtin_bg(int argc, char **argv)
+int					builtin_bg(int argc, char **argv)
 {
 	t_list	*elem;
 	int		ret;
 
-	if (!(elem = check_args(argc, argv, (ret = ft_atoi(argv[1])))))
-		return (-1);
+	ret = ft_atoi(argv[1]);
+	if (!(elem = check_args(argc, argv, ret)))
+		return (1);
 	else
 	{
 		if (((t_inffork *)elem->content)->status[0] != 'S')

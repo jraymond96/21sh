@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/14 18:25:06 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/30 16:42:20 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/08/29 23:21:25 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,12 @@ void		clearhistory(int save)
 	int	data[2];
 
 	data[0] = save;
-	data[1] = open(g_shell->history_file, O_WRONLY | O_CREAT, 0666); 
+	data[1] = open(g_shell->history_file, O_WRONLY | O_TRUNC | O_CREAT, 0666);
 	g_shell->history = ft_lstend(g_shell->history);
 	ft_lstdelv_d(&g_shell->history, delhistory, (void *)data);
 	close(data[1]);
 }
-
+/*
 void		movehistory(char c, char *line, size_t *cursor)
 {
 	char	*str;
@@ -80,5 +80,4 @@ void		movehistory(char c, char *line, size_t *cursor)
 	free(tmp);
 	if (str == g_shell->cline)
 		ft_memdel((void **)&g_shell->cline);
-	*cursor = ft_strlen(line);
-}
+}*/

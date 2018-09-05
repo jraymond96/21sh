@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/09 22:49:58 by mmerabet          #+#    #+#             */
-/*   Updated: 2017/12/19 21:44:01 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/08/04 15:05:06 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,14 @@
 char	*ft_strjoinc(const char *a, char b)
 {
 	char	*s;
+	int		len;
 
-	if ((s = ft_strmdup(a, 1)) == NULL)
+	len = (a ? ft_strlen(a) : 0);
+	if (!(s = ft_strnew(len + 1)))
 		return (NULL);
-	s[ft_strlen(a)] = b;
+	if (a)
+		ft_strcat(s, a);
+	s[len] = b;
 	return (s);
 }
 
@@ -26,9 +30,8 @@ char	*ft_strjoinc_clr(char *a, char b)
 {
 	char	*s;
 
-	if ((s = ft_strmdup(a, 1)) == NULL)
+	if ((s = ft_strjoinc(a, b)) == NULL)
 		return (NULL);
-	s[ft_strlen(a)] = b;
 	free(a);
 	return (s);
 }

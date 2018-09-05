@@ -6,11 +6,9 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/30 16:40:15 by jraymond          #+#    #+#             */
-/*   Updated: 2018/08/01 18:10:23 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/09/03 20:55:01 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "../logger/incs/logger.h"
 
 #include "shell.h"
 #include "ft_list.h"
@@ -34,12 +32,10 @@ static	t_list		*init_t_list(t_inffork *content, size_t size)
 {
 	t_list	*elem;
 
-	if (!(elem = (t_list *)malloc(size)))
+	if (!(elem = (t_list *)ft_memalloc(sizeof(t_list))))
 		ft_exitf(EXIT_FAILURE, "21sh: %s\n", ft_strshret(SH_MALLOC));
 	elem->content = content;
 	elem->content_size = size;
-	elem->next = NULL;
-	elem->parent = NULL;
 	return (elem);
 }
 
@@ -56,11 +52,10 @@ int					nbproc_inbg(t_list *b_list)
 						MAX_BGPROC);
 		return (-1);
 	}
-	else
-		return (x);
+	return (x);
 }
 
-int					handle_bgproc(pid_t  pid_fork, char **cmd, int status)
+int					handle_bgproc(pid_t pid_fork, char **cmd, int status)
 {
 	static int	numproc;
 	t_list		*elem;
@@ -69,15 +64,15 @@ int					handle_bgproc(pid_t  pid_fork, char **cmd, int status)
 
 	if ((ret = nbproc_inbg(g_shell->bgproc)) == -1)
 		return (-1);
-	numproc = ret == 0 ? 1 : ++numproc;
+	if (ret == 0)
+		numproc = 1;
+	else
+		++numproc;
 	new = init_infproc(numproc, pid_fork, cmd);
 	elem = init_t_list(new, sizeof(t_inffork));
-	if (!g_shell->bgproc)
-		g_shell->bgproc = elem;
-	else
-		ft_lstpush(g_shell->bgproc, elem);
+	ft_lstpush_p(&g_shell->bgproc, elem);
 	if (getpid() != pid_fork)
-	handle_bgsign(elem, 0);
+		handle_bgsign(elem, 0);
 	handle_bgstat(pid_fork, status);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/15 18:03:23 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/06 01:53:16 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/08/17 15:54:06 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,33 @@ int			builtin_cd(int argc, char **argv)
 		if (ft_strequ((name = argv[0]), "-"))
 			name = ft_getenv("OLDPWD", g_shell->envp);
 		if ((acc = ft_chdir(name, g_shell->pwd, 2048, argc)) != SH_OK)
-			return (ft_printf_fd(2, "cd: %s: %s\n", ft_strshret(acc), name) ? 1 : 1);
+		{
+			ft_printf_fd(2, "cd: %s: %s\n", ft_strshret(acc), name);
+			return (1);
+		}
 		if (ft_strequ(argv[0], "-"))
 			ft_printf("%s\n", name);
 	}
 	ft_setenv("OLDPWD", ft_getenv("PWD", g_shell->envp), &g_shell->envp);
 	ft_setenv("PWD", g_shell->pwd, &g_shell->envp);
 	return (0);
+}
+
+static void	print_pwd(int h)
+{
+	int		len;
+
+	if (h)
+	{
+		len = (int)ft_strlen(g_shell->homepwd);
+		if (ft_strnequ(g_shell->pwd, g_shell->homepwd, len))
+		{
+			ft_putchar('~');
+			ft_putstr(g_shell->pwd + len);
+			return ;
+		}
+	}
+	ft_putstr(g_shell->pwd);
 }
 
 int			builtin_pwd(int argc, char **argv)
@@ -71,7 +91,7 @@ int			builtin_pwd(int argc, char **argv)
 	argc = 0;
 	ft_bzero(&opt, sizeof(t_opt));
 	++argv;
-	while (ft_getopt(&argv, "LPn", &opt) != OPT_END)
+	while (ft_getopt(&argv, "LPnh", &opt) != OPT_END)
 	{
 		if (opt.c == 'L')
 			argc &= (~(1 << 0));
@@ -79,13 +99,15 @@ int			builtin_pwd(int argc, char **argv)
 			argc |= (1 << 0);
 		else if (opt.c == 'n')
 			argc |= (1 << 1);
+		else if (opt.c == 'h')
+			argc |= (1 << 2);
 		else if (ft_printf_fd(2, "pwd: bad option: %c\n", opt.c))
 			return (1);
 	}
 	if (argc & (1 << 0))
 		ft_printf("%s", ft_getcwd(NULL, 0));
 	else
-		ft_printf("%s", g_shell->pwd);
+		print_pwd((argc & (1 << 2)));
 	if (!(argc & (1 << 1)))
 		ft_printf("\n");
 	return (0);

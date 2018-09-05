@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/01 14:51:21 by jraymond          #+#    #+#             */
-/*   Updated: 2018/08/01 21:10:41 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/08/17 14:54:15 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 ** opt true => the bg is finish;
 ** opt false => the bg are new sign +;
 */
-
-#include "../logger/incs/logger.h"
 
 #include "shell.h"
 #include "ft_printf.h"
@@ -37,7 +35,7 @@ static	int		lstlen(void)
 static	t_list	*ret_sign(int opt)
 {
 	t_list	*lst;
-	
+
 	lst = g_shell->bgproc;
 	if (opt)
 		while (lst && ((t_inffork *)lst->content)->sign != '+')
@@ -52,9 +50,7 @@ static	int		no_opt(t_list *elem)
 {
 	t_list	*lst;
 	t_list	*ret;
-	int		i;
 
-	i = 0;
 	lst = g_shell->bgproc;
 	while (lst)
 	{
@@ -94,11 +90,11 @@ static	int		withopt(t_list *elem)
 		if (!(lst = ret_sign(0)))
 			return (0);
 		((t_inffork *)lst->content)->sign = '+';
-		 g_shell->lstmodif_pid = lst;
-		if (lst->parent && ((t_inffork *)lst->parent->content)->sign != '-')
-			((t_inffork *)lst->parent->content)->sign = '-';
-		else if (lst->next && ((t_inffork *)lst->next->content)->sign != '-')
-			((t_inffork *)lst->next->content)->sign = '-';
+		g_shell->lstmodif_pid = lst;
+		if (elem->parent && ((t_inffork *)elem->parent->content)->sign == ' ')
+			((t_inffork *)elem->parent->content)->sign = '-';
+		else if (elem->next && ((t_inffork *)elem->next->content)->sign == ' ')
+			((t_inffork *)elem->next->content)->sign = '-';
 	}
 	return (0);
 }

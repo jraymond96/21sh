@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/09 22:45:25 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/11 18:23:47 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/08/02 10:50:15 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,9 @@ char	*ft_strnjoin(const char *a, const char *b, size_t n)
 	size_t	bl;
 
 	al = (a ? ft_strlen(a) : 0);
-	bl = (b ? ft_strlen(b) : 0);
-	if (!(s = ft_strnew(al + bl)))
+	if (n > (bl = (b ? ft_strlen(b) : 0)))
+		n = bl;
+	if (!(s = ft_strnew(al + n)))
 		return ((char *)a);
 	if (a)
 		ft_strcat(s, a);

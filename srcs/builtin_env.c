@@ -17,9 +17,9 @@
 
 static int	printusage(t_opt *opt, char **envp)
 {
-	ft_printf("env: illegal option -- ");
-	ft_printf((opt->c == '-' ? "%2$s\n" : "%c\n"), opt->c, opt->clong);
-	ft_printf("usage: env [-iv] [-P utilpath] [-u name] "
+	ft_printf_fd(2, "env: illegal option -- ");
+	ft_printf_fd(2, (opt->c == '-' ? "%2$s\n" : "%c\n"), opt->c, opt->clong);
+	ft_printf_fd(2, "usage: env [-iv] [-P utilpath] [-u name] "
 			"[name=value ...] [utility [argument ...]]\n");
 	ft_delenv(&envp);
 	return (1);
@@ -40,10 +40,10 @@ static int	execenv(char **argv, char **envp, char **paths, int verb)
 		}
 		if ((verb = ft_getfullpath(*argv, paths, fullpath, 1024)) != SH_OK
 				&& ft_printf("env: %s: %s\n", *argv, ft_strshret(verb)))
-			return (1);
-		else if (ft_exec(fullpath, argv, envp, NULL) == -1
-				&& ft_printf("env: exec format error: %s\n", *argv))
-			return (1);
+			return (127);
+		else if (ft_exec(fullpath, argv, envp, NULL) == 126
+				&& ft_printf_fd(2, "env: exec format error: %s\n", *argv))
+			return (126);
 	}
 	else if ((paths = envp))
 		while (*paths)

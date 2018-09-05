@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/22 20:49:13 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/23 21:19:59 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/08/20 13:28:11 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 #include "ft_printf.h"
 
 static t_exp		g_exps[] = {
-	{"*[(*);\"?\";'?'@b]:(*[@>0]", NULL, 0},
-	{"\"*\":'*':\"*:'*", NULL, 0},
+	{"*[(?);\"*\";'*'@b]:(*[@>0]", NULL, 0},
+	{"\"*\":'*':*[\"'@=1]*[@>0]:\":'", NULL, 0}
 };
 
 static t_op			g_ops[] = {
@@ -62,7 +62,7 @@ static int			expr_par_cb(t_ast *ast, void **op, void *res,
 	if (*(ptr = ft_strend(ast->name)) != ')')
 		return (EXPR_PAREXPECT);
 	*ptr = '\0';
-	efail = ft_vexpr(ast->name + 1, (EXPRT *)res, data, data->vp);
+	efail = ft_expr(ast->name + 1, (EXPRT *)res, data, data->args);
 	*ptr = ')';
 	return (efail);
 }
@@ -84,9 +84,11 @@ static int			expr_cmd_cb(t_ast *ast, void **op, void *res,
 			return (EXPR_BADEXPR);
 		*(EXPRT *)res = (EXPRT)ft_atoll(ast->name);
 	}
-	else if (!(ptr = ft_getenv(ast->name, *data->var_db)))
+	else if (ft_isalpha(*ast->name)
+			&& !(ptr = ft_getenv(ast->name, *data->var_db)))
 		*(EXPRT *)res = (EXPRT)0;
-	else if (!ft_isdigit(*ptr))
+	else if (!ft_isalpha(*ast->name)
+			|| (!ft_isdigit(*ptr) && *ptr != '-' && *ptr != '+'))
 		return (EXPR_NOTINT);
 	else
 		*(EXPRT *)res = (EXPRT)ft_atoll(ptr);
@@ -94,7 +96,7 @@ static int			expr_cmd_cb(t_ast *ast, void **op, void *res,
 }
 
 static t_astfunc	g_expr_callbacks[] = {
-	{"*[(*);\"?\";'?'@b]:(*", expr_par_cb, NULL, 3},
+	{"*[(?);\"*\";'*'@b]:(*", expr_par_cb, NULL, 3},
 	{"", expr_cmd_cb, NULL, 3},
 	{"++:--", NULL, expr_incdec_cb, 0},
 	{"*[*@=2]:*[*%/&|^@=1]:<<:>>", expr_arth_cb, NULL, 2},
@@ -113,19 +115,7 @@ static t_iterf		g_arithmetic_iter = {
 };
 
 int					ft_expr(const char *expr, EXPRT *res,
-						t_exprdata *data, ...)
-{
-	int			efail;
-	va_list		vp;
-
-	va_start(vp, data);
-	efail = ft_vexpr(expr, res, data, vp);
-	va_end(vp);
-	return (efail);
-}
-
-int					ft_vexpr(const char *expr, EXPRT *res,
-						t_exprdata *data, va_list vp)
+						t_exprdata *data, t_args *args)
 {
 	int			efail;
 	t_ast		*ast;
@@ -135,13 +125,12 @@ int					ft_vexpr(const char *expr, EXPRT *res,
 		return (EXPR_MEMERR);
 	if (!data)
 		data = ft_bzero(&edata, sizeof(t_exprdata));
-	va_copy(data->vp, vp);
+	data->args = args;
 	g_arithmetic_lexer.data = (void *)data;
 	ast = ft_lexer(expr, &g_arithmetic_lexer);
 	++data->expr_lvl;
 	efail = ft_astiter(ast, res, &g_arithmetic_iter);
 	--data->expr_lvl;
-	va_end(data->vp);
 	ft_astdel(&ast);
 	return (efail);
 }
@@ -172,9 +161,7 @@ char				*ft_exprerr(int efail)
 	while (i < g_exprerrs_len)
 	{
 		if (efail == g_exprerrs[i].t)
-		{
 			return (g_exprerrs[i].name);
-		}
 		++i;
 	}
 	return ("error");

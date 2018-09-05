@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/10 18:14:39 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/25 13:58:46 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/08/23 20:13:56 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	end_va(va_list vp)
 	return (1);
 }
 
-int	ft_strpbrkstrp_pos(const char *a, int type, size_t size, ...)
+int			ft_strpbrkstrp_pos(const char *a, int type, size_t size, ...)
 {
 	int		pos;
 	int		len;
@@ -42,7 +42,7 @@ int	ft_strpbrkstrp_pos(const char *a, int type, size_t size, ...)
 	return (len ? pos : -1);
 }
 
-int	ft_strpbrkstrpl_pos(const char *a, int type, size_t size, ...)
+int			ft_strpbrkstrpl_pos(const char *a, int type, size_t size, ...)
 {
 	int		pos;
 	int		len;

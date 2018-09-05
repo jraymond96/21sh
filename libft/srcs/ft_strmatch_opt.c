@@ -1,13 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strmatch_opt.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/08/23 20:11:15 by mmerabet          #+#    #+#             */
+/*   Updated: 2018/08/23 20:13:00 by mmerabet         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_str.h"
 #include "ft_mem.h"
 #include "ft_list.h"
 #include "ft_printf.h"
-
-typedef struct	s_strmchi
-{
-	char		*str;
-	t_mchi		*mchi;
-}				t_strmchi;
 
 static t_mchi	*mchi_db(const char *str)
 {
@@ -25,13 +31,14 @@ static t_mchi	*mchi_db(const char *str)
 		}
 		it = it->next;
 	}
-	if (!(mchi.mchi = ft_getmchi(str)) || !(mchi.str = ft_strdup(str)))
+	if (!(mchi.mchi = ft_getmchi(str))
+			|| !(mchi.str = ft_strdup(str)))
 		return (mchi.mchi);
 	ft_lstpush_p(&mchi_list, ft_lstnew(&mchi, sizeof(t_strmchi)));
 	return (mchi.mchi);
 }
 
-int			ft_strmatch_opt(const char *str, const char *match, int option)
+int				ft_strmatch_opt(const char *str, const char *match, int option)
 {
 	int		ret;
 	char	*tmp;
@@ -55,7 +62,7 @@ int			ft_strmatch_opt(const char *str, const char *match, int option)
 	return (ret ? 1 : 0);
 }
 
-static void	end_match(char	**tmp1, const char *match, int n, int option)
+static void		end_match(char **tmp1, const char *match, int n, int option)
 {
 	if (!match)
 		return ;
@@ -66,7 +73,7 @@ static void	end_match(char	**tmp1, const char *match, int n, int option)
 			*tmp1 = ft_strndup(match, n);
 }
 
-int			ft_strnmatch_opt(const char *str, const char *match, int n,
+int				ft_strnmatch_opt(const char *str, const char *match, int n,
 						int option)
 {
 	int		ret;

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 16:36:17 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/05/16 20:35:22 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/08/12 12:18:01 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "ft_mem.h"
 #include "ft_str.h"
 #include <termios.h>
+#include <sys/ioctl.h>
 
 void	ft_getcursor(int *x, int *y)
 {
@@ -24,10 +25,10 @@ void	ft_getcursor(int *x, int *y)
 
 	if (!x && !y)
 		return ;
-	ft_putstr("\033[6n");
 	nx = 0;
 	ny = 0;
 	ft_makeraw(1);
+	ft_putstr("\033[6n");
 	if (ft_getch() && ft_getch())
 	{
 		while ((c = ft_getch()) != ';')
@@ -42,6 +43,17 @@ void	ft_getcursor(int *x, int *y)
 		*y = ny;
 }
 
+void	ft_getsize(int *row, int *col)
+{
+	struct winsize	w;
+
+	ioctl(0, TIOCGWINSZ, &w);
+	if (col)
+		*col = w.ws_col;
+	if (row)
+		*row = w.ws_row;
+}
+
 void	ft_makeraw(int setb)
 {
 	static int				isset;
@@ -54,7 +66,8 @@ void	ft_makeraw(int setb)
 		tcgetattr(0, &origt);
 		ft_memcpy(&newt, &origt, sizeof(struct termios));
 		newt.c_lflag &= ~(ICANON | ECHO | ISIG);
-		newt.c_iflag &= ~(ICRNL);
+		newt.c_iflag &= ~ICRNL;
+		newt.c_cflag &= ~CREAD;
 		newt.c_cc[VMIN] = 1;
 		newt.c_cc[VTIME] = 0;
 		tcsetattr(0, TCSANOW, &newt);

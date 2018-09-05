@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/18 18:12:06 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/06 08:12:25 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/08/16 23:12:00 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	expr_parenthesis(char *tld, int n[3], t_exprdata *data, char **res)
 		return (EXPR_NCLOSEPAR);
 	tld[n[0] - 1] = '\0';
 	value = 0;
-	if ((efail = ft_vexpr(tld + 1, &value, data, data->vp)))
+	if ((efail = ft_expr(tld + 1, &value, data, data->vp)))
 		return (efail);
 	tld[n[0] - 1] = tmp;
 	*res = ft_lltoa(value);

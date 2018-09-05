@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 13:31:39 by jraymond          #+#    #+#             */
-/*   Updated: 2018/08/07 18:47:41 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/08/17 14:55:00 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,8 @@ int					handle_bgstat(pid_t pid, int status)
 	{
 		if (status == g_bgstat[i].status)
 		{
-			ft_strcpy(((t_inffork *)elem->content)->status, g_bgstat[i].message);
+			ft_strcpy(((t_inffork *)elem->content)->status,
+						g_bgstat[i].message);
 			break ;
 		}
 	}

@@ -6,11 +6,9 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/19 16:04:49 by jraymond          #+#    #+#             */
-/*   Updated: 2018/08/07 18:28:26 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/08/17 14:48:30 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "../logger/incs/logger.h"
 
 #include "shell.h"
 #include "ft_mem.h"
@@ -50,27 +48,28 @@ t_list			*delete_info(t_list *elem)
 {
 	int		i;
 	t_list	*save;
-	t_list	*b_list;
 
 	i = -1;
 	save = elem->next;
-	b_list = g_shell->bgproc;
-/*	if (!elem->parent)
-	{
-		i = 0;
-		if (elem->next)
-			g_shell->bgproc = elem->next;
-		else
-			g_shell->bgproc = NULL;
-	}
-	else
-		elem->parent->next = elem->next;*/
 	ft_lstextract(&g_shell->bgproc, elem);
 	ft_lstdelone(&elem, del);
 	if (i == 0)
 		return (g_shell->bgproc);
 	else
 		return (save);
+}
+
+t_list			*check_bgend_bis(t_inffork *struc, t_list *elem)
+{
+	if (!*struc->cmd)
+		ft_printf("[%d]  %c %s\n", struc->x, struc->sign,
+					struc->status);
+	else
+		ft_printf("[%d]  %c %s", struc->x, struc->sign,
+					struc->status);
+	print_cmd_args(struc->cmd);
+	struc->modif &= (0 << 0);
+	return (elem->next);
 }
 
 void			check_bgend(void)
@@ -85,29 +84,17 @@ void			check_bgend(void)
 		if (end_status(struc->status) != -1)
 		{
 			if (!*struc->cmd)
-				ft_printf("[%d]  %c %s\n", struc->x, struc->sign, 
+				ft_printf("[%d]  %c %s\n", struc->x, struc->sign,
 							struc->status);
 			else
 				ft_printf("[%d]  %c %s", struc->x, struc->sign,
 							struc->status);
 			print_cmd_args(struc->cmd);
-			log_trace("supression du bg [%d]\n", struc->pid);
 			handle_bgsign(elem, 1);
 			elem = delete_info(elem);
 		}
 		else if (struc->modif & (1 << 0))
-		{
-			if (!*struc->cmd)
-				ft_printf("[%d]  %c %s\n", struc->x, struc->sign, 
-							struc->status);
-			else
-				ft_printf("[%d]  %c %s", struc->x, struc->sign,
-							struc->status);
-			print_cmd_args(struc->cmd);
-			log_trace("Modif du status bg [%d]\n", struc->pid);
-			elem = elem->next;
-			struc->modif &= (0 << 0);
-		}
+			elem = check_bgend_bis(struc, elem);
 		else
 			elem = elem->next;
 	}

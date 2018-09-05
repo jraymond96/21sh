@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:29:29 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/16 17:38:10 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/08/17 16:46:40 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 int			builtin_exit(int argc, char **argv)
 {
 	g_shell->running = 0;
-	//bash kill pas les process bg si il est exit, peut le faire facilement
 	freelst_bg();
 	if (argc > 1)
 		return ((int)ft_atoui(argv[1]));

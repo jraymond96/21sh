@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:09:27 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/30 21:30:23 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/08/26 18:30:36 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,19 @@ static t_op	g_shellerrs[] = {
 	{"command not found", SH_NFOUND},
 	{"no such file or directory", SH_NEXIST},
 	{"not a directory", SH_NDIR},
-	{"not a file",  SH_NFILE},
+	{"not a file", SH_NFILE},
 	{"operation failed", SH_EFAIL},
 	{"operation success", SH_ESUCCESS},
 	{"pipe has failed", SH_PIPFAIL},
 	{"dup failed", SH_DUPFAIL},
 	{"fork failed", SH_FORKFAIL},
 	{"exec format error", SH_EXECERR},
+	{"could not open file", SH_OPENFILE},
+	{"bad file descriptor", SH_BADFD},
+	{"parse error", SH_BADEXPR},
+	{"failed to open temporary file for heredoc (writing)", SH_HDOCWFAIL},
+	{"failed to open temporary file for heredoc (reading)", SH_HDOCRFAIL},
+	{"missing WORD delimiter for heredoc", SH_HDOCWORD},
 	{"maximum of background processes reached", SH_MAXBGPROC},
 	{"condition statement without then", SH_CONDWTHEN},
 	{"then without previous condition statement", SH_THENWCOND},

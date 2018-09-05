@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/09 20:36:55 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/19 19:42:12 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/03 19:24:40 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 static pid_t	new_fork(t_ast *ast, void *res, t_iterf *iterf, int fd[2])
 {
 	pid_t	pid;
+	pid_t	save;
 	int		ir;
 
 	if (!ast || !ast->name)
@@ -25,9 +26,12 @@ static pid_t	new_fork(t_ast *ast, void *res, t_iterf *iterf, int fd[2])
 	ir = (ast == ast->parent->right ? 1 : 0);
 	if (!(pid = fork()))
 	{
+		save = getpgrp();
 		close(fd[ir]);
 		dup2(fd[!ir], !ir);
+		handle_pgid();
 		ft_astiter(ast, res, iterf);
+		tcsetpgrp(0, save);
 		close(fd[!ir]);
 		exit(*(int *)res);
 	}
@@ -46,15 +50,17 @@ int				shell_pipe_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	leftres = 0;
 	if (pipe(fd) == -1)
 		return (SH_PIPFAIL);
-	if ((pidr = new_fork(ast->right, &rightres, iterf, fd)) == -1)
+	if ((pidr = new_fork(ast->right, &rightres, iterf, fd)) == -1
+			&& close(fd[1]) != 1 && close(fd[0]) != 1)
 		return (SH_FORKFAIL);
-	if ((pidl = new_fork(ast->left, &leftres, iterf, fd)) == -1)
+	if ((pidl = new_fork(ast->left, &leftres, iterf, fd)) == -1
+			&& close(fd[1]) != 1 && close(fd[0]) != 1)
 		return (SH_FORKFAIL);
 	close(fd[1]);
 	close(fd[0]);
 	waitpid(pidl, NULL, 0);
 	waitpid(pidr, res, 0);
-	*(int *)res >>= 8;
+	*(int *)res = WEXITSTATUS(*(int *)res);
 	return (0);
 }
 
@@ -62,16 +68,10 @@ int				shell_andor_seco_cb(t_ast *ast, void **op, void *res,
 								t_iterf *iterf)
 {
 	g_shell->exitcode = *(int *)op[0];
-	if (*ast->name == '&')
+	if (*ast->name == '|' || *ast->name == '&')
 	{
-		if (*(int *)op[0] == 0)
-			ft_astiter(ast->right, res, iterf);
-		else
-			*(int *)res = *(int *)op[0];
-	}
-	else if (*ast->name == '|')
-	{
-		if (*(int *)op[0] != 0)
+		if ((*ast->name == '|' && *(int *)op[0] != 0)
+				|| (*ast->name == '&' && *(int *)op[0] == 0))
 			ft_astiter(ast->right, res, iterf);
 		else
 			*(int *)res = *(int *)op[0];
@@ -91,10 +91,7 @@ int				shell_bckgrnd_cb(t_ast *ast, void **op, void *res,
 {
 	(void)iterf;
 	(void)op;
-	if (*ast->name == '&')
-	{
-		if (exec_cmd_background(ast, res, iterf) != 0)
-			return (SH_FORKFAIL);
-	}
+	if (*ast->name == '&' && exec_cmd_background(ast, res, iterf) != 0)
+		return (SH_FORKFAIL);
 	return (0);
 }

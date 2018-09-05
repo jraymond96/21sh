@@ -6,12 +6,13 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 16:09:34 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/08 16:22:30 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/08/05 16:52:06 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_str.h"
 #include "ft_mem.h"
+#include "ft_printf.h"
 
 static int	checkbet(char **s, t_pairint *pi)
 {
@@ -37,7 +38,7 @@ static int	checkbet(char **s, t_pairint *pi)
 		*s += ret;
 	pi->a[pi->la] = atmp;
 	pi->b[pi->lb] = btmp;
-	return (0);
+	return (ret);
 }
 
 static int	checkequ(char **s, int f, t_pairint *pi, int r)
@@ -104,9 +105,9 @@ int			ft_strbetweenps_ext(char **s, const char *ext)
 	r = 0;
 	while (*it)
 	{
-		if (*it == '\\' && ++it)
-			if (!*it || !*(++it))
-				break ;
+		while (*it == '\\')
+			if (!*(++it) || !*(++it))
+				return (-1);
 		ret = checkext(&it, (char *)ext, &pi, r);
 		if (ret == -1)
 			++it;

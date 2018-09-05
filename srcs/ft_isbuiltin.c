@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:09:06 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/08/07 17:39:44 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/08/17 13:56:47 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ static t_builtin	g_builtins[] = {
 	{"exit", builtin_exit}, {"printenv", builtin_printenv},
 	{"history", builtin_history}, {"pwd", builtin_pwd},
 	{"true", builtin_true}, {"false", builtin_false},
-	{"return", builtin_return},
+	{"return", builtin_return}, {"function", builtin_function},
+	{"source", builtin_source},
 	{"jobs", builtin_jobs}, {"fg", builtin_fg}, {"bg", builtin_bg},
 };
 

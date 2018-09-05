@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/03 06:51:04 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/21 21:19:43 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/08/16 19:00:53 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ int			ft_parser(const char **str, t_args *args, t_parserf *pdef)
 		*str += pos;
 	if (!**str)
 		return (-1);
-	getalls((args->parserf = pdef));
+	getalls(pdef);
 	while (**str)
 	{
 		if (checkbreak(str, pdef, &pos))
@@ -126,5 +126,5 @@ int			ft_parser(const char **str, t_args *args, t_parserf *pdef)
 	}
 	args->argv = ft_memjoin_clr(args->argv, sizeof(char *) * args->argc,
 		ft_bzero(&s, sizeof(char *)), sizeof(char *));
-	return ((args->data = pdef->data) ? pos : pos);
+	return (pos);
 }

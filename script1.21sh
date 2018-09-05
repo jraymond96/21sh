@@ -1,4 +1,0 @@
-$[a = 0];
-while $[a <= 1000] then
-	echo $a && $[++a];
-return 42;

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 20:58:56 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/21 18:54:50 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/08/16 19:02:20 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,5 @@ t_args		*ft_argscopy(t_args *args)
 		return (NULL);
 	nwargs->argc = args->argc;
 	nwargs->argv = ft_copyenv(args->argv);
-	nwargs->data = args->data;
-	nwargs->parserf = args->parserf;
 	return (nwargs);
 }

@@ -6,40 +6,75 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 19:09:16 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/08/07 14:13:22 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/09/03 20:35:36 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "../logger/incs/logger.h"
 
 #include "shell.h"
 #include "ft_str.h"
 #include "ft_mem.h"
 #include "ft_io.h"
 #include "ft_types.h"
+#include "ft_list.h"
 #include <unistd.h>
-#include <sys/signal.h>
 #include <signal.h>
 #include <locale.h>
+#include <sys/signal.h>
+#include <sys/wait.h>
 
-extern t_shell	*g_shell;
-
-static void	sign_handler(int sign)
+void	sign_child(int sign)
 {
-	(void)sign;
-	if (sign == SIGINT)
+	t_list	*elem;
+	pid_t	pid;
+	int		ret;
+
+	elem = g_shell->bgproc;
+	while (elem)
 	{
-		if (g_shell->curpid)
+		pid = ((t_inffork *)elem->content)->pid;
+		if (sign == SIGCHLD && waitpid(pid, &ret, WNOHANG) == pid)
 		{
-			log_trace("Pid_killed: %d\n", g_shell->curpid);
-			kill(g_shell->curpid, 1);
+			if (WIFCONTINUED(ret))
+				handle_bgstat(pid, BG_RUN);
+			else if (!WIFEXITED(ret))
+				handle_bgstat(pid, BG_KILL);
+			else if (WIFEXITED(ret))
+				handle_bgstat(pid, BG_END);
 		}
-		if (g_shell->script)
-			exit(0);
+		elem = elem->next;
 	}
 }
 
-static void	initenvp(char **envp)
+static	void	sign_handler(int sign)
+{
+	char	*tmp;
+
+	(void)sign;
+	if (sign == -1)
+	{
+		signal(SIGINT, sign_handler);
+		signal(SIGWINCH, sign_handler);
+		signal(SIGTTOU, SIG_IGN);
+		signal(SIGTTIN, SIG_IGN);
+		signal(SIGCHLD, sign_child);
+	}
+	if (sign == SIGINT)
+	{
+		g_shell->kill_builtin = 1;
+		if (g_shell->script)
+			exit(0);
+	}
+	else if (sign == SIGWINCH)
+	{
+		ft_getsize(&g_shell->height, &g_shell->width);
+		ft_setenv("LINES", (tmp = ft_itoa(g_shell->height)), &g_shell->envp);
+		free(tmp);
+		ft_setenv("COLUMNS", (tmp = ft_itoa(g_shell->width)), &g_shell->envp);
+		free(tmp);
+	}
+}
+
+static	void	initenvp(char **envp)
 {
 	int	i;
 
@@ -60,19 +95,19 @@ static void	initenvp(char **envp)
 	g_shell->envp[i] = NULL;
 }
 
-int			shell_begin(char *name, int argc, char **argv, char **envp)
+int				shell_begin(char *name, int argc, char **argv, char **envp)
 {
-	char	*tmp;
+	static	t_args	args;
+	char			*tmp;
 
-	signal(SIGINT, sign_handler);
+	sign_handler(-1);
 	if (!(g_shell = (t_shell *)ft_memalloc(sizeof(t_shell))))
 		ft_exit(EXIT_FAILURE, "Failed to begin shell. Exiting\n");
-	g_shell->paths = ft_getpaths(envp);
 	setlocale(LC_ALL, "");
-	g_shell->name = name + (*name == '.' ? 2 : 0);
-	g_shell->running = 1;
-	g_shell->ihis = -1;
-	g_shell->exitcode = 0;
+	init_gshell(envp, name);
+	args.argc = argc;
+	args.argv = argv;
+	g_shell->curargs = &args;
 	initenvp(envp);
 	ft_bzero(g_shell->pwd, 2048);
 	if ((tmp = ft_getenv("PWD", g_shell->envp)))
@@ -83,28 +118,6 @@ int			shell_begin(char *name, int argc, char **argv, char **envp)
 			(tmp = ft_itoa(ft_atoi(ft_getenv("SHLVL", g_shell->envp)) + 1)),
 			&g_shell->envp);
 	free(tmp);
+	sign_handler(SIGWINCH);
 	return (shell_init(argc, argv));
-}
-
-int			shell_end(void)
-{
-	char	**ptr;
-	int		exitcode;
-
-	if ((ptr = g_shell->paths))
-		while (*ptr)
-			free(*ptr++);
-	free(g_shell->paths);
-	if ((ptr = g_shell->envp))
-		while (*ptr)
-			free(*ptr++);
-	free(g_shell->script);
-	free(g_shell->envp);
-	free(g_shell->cline);
-	clearhistory(1);
-	close(g_shell->ihis);
-	exitcode = g_shell->exitcode;
-	free(g_shell);
-	g_shell = NULL;
-	return (exitcode);
 }

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/26 16:10:49 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/25 17:09:53 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/08/17 14:40:41 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ static t_list	*getrdrctn(t_ast *red, t_ast *cmd, t_expf *expf)
 	char		*ptr;
 	int			def;
 
+	ft_bzero(&r, sizeof(t_redir));
 	if (ft_strmatch(red->name, "*>>*"))
 		r.type = TK_LRIGHT;
 	else if (ft_strmatch(red->name, "*<<*"))
@@ -59,16 +60,16 @@ static t_list	*getrdrctn(t_ast *red, t_ast *cmd, t_expf *expf)
 	else if (ft_strmatch(red->name, "*<*"))
 		r.type = TK_LEFT;
 	def = (r.type == TK_LEFT || r.type == TK_LLEFT ? 0 : 1);
-	r.fd_out = (ft_isdigit(*red->name) ? ft_atoi(red->name) : def);
+	r.fda = (ft_isdigit(*red->name) ? ft_atoi(red->name) : def);
 	ptr = red->name;
 	while (ft_isdigit(*ptr))
 		++ptr;
 	ptr += ((r.type == TK_LLEFT || r.type == TK_LRIGHT) ? 2 : 1);
-	r.replace_fd = (*ptr == '&' ? 1 : 0);
-	if (r.replace_fd && *(ptr + 1) == '-')
-		r.fd_in = -1;
-	else if (r.replace_fd)
-		r.fd_in = (ft_isdigit(*(ptr + 1)) ? ft_atoi(ptr + 1) : def);
+	r.rep = (*ptr == '&' ? 1 : 0);
+	if (r.rep && *(ptr + 1) == '-')
+		r.fdb = -1;
+	else if (r.rep)
+		r.fdb = (ft_isdigit(*(ptr + 1)) ? ft_atoi(ptr + 1) : def);
 	return (implement_args(cmd, red, &r, expf));
 }
 

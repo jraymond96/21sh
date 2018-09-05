@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/06 01:53:44 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/08 22:48:54 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/08/23 20:21:42 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,8 @@ int	expr_incdec_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 
 int	expr_unary_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 {
-	int		efail;
-	int		i;
-	va_list	vp;
+	int			efail;
+	t_exprdata	*data;
 
 	(void)op;
 	if ((!ast->left || !ast->left->name) && (!ast->right || !ast->right->name))
@@ -64,17 +63,11 @@ int	expr_unary_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 		*(EXPRT *)res = !(*(EXPRT *)res);
 	else if (*ast->parent->name == '~')
 		*(EXPRT *)res = ~(*(EXPRT *)res);
-	else if (*ast->parent->name == '@')
+	else if (*ast->parent->name == '@' && (efail = *(int *)res))
 	{
-		va_copy(vp, ((t_exprdata *)ast->data)->vp);
-		efail = *(int *)res;
-		*(EXPRT *)res = (EXPRT)0;
-		i = 0;
-		while (i < ((t_exprdata *)ast->data)->vp_limit && i++ < efail)
-			*(EXPRT *)res = va_arg(vp, EXPRT);
-		va_end(vp);
-		if (i < efail)
-			return (EXPR_OUTRANGE);
+		data = (t_exprdata *)ast->data;
+		if ((*(EXPRT *)res = 0) || efail < data->args->argc)
+			*(EXPRT *)res = ft_atoi(data->args->argv[efail]);
 	}
 	return (0);
 }

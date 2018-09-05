@@ -6,11 +6,9 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/10 17:42:32 by jraymond          #+#    #+#             */
-/*   Updated: 2018/08/07 17:37:38 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/08/17 14:07:31 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "../logger/incs/logger.h"
 
 #include "shell.h"
 #include "ft_io.h"
@@ -25,77 +23,45 @@
 
 static int		g_pid;
 
-static	int		error_bgproc(int i)
+void			son_fork(t_ast *ast, void *res, t_iterf *iterf)
 {
-	if (i == 0)
-		ft_printf_fd(2, "21sh: %s (%d)\n",
-				ft_strshret(SH_MAXBGPROC), MAX_BGPROC);
-	else if (i == 1)
-		ft_exitf(EXIT_FAILURE, "21sh: Error Malloc\n");
-	else if (i == 2)
-		ft_exitf(EXIT_FAILURE, "21sh: Error Setpgid\n");
-	return (-1);
-}
+	char		**args;
+	t_list		*elem;
+	pid_t		pid;
 
-static	void	sign_child(int sign)
-{
-	t_list	*elem;
-	pid_t	pid;
-	int		ret;
-
-	elem = g_shell->bgproc;
-	while (elem)
+	signal(SIGINT, SIG_DFL);
+	pid = getpid();
+	setpgid(0, 0);
+	args = ret_args(ast);
+	if (handle_bgproc(pid, args, BG_RUN) == -1)
+		exit(126);
+	elem = ft_lstend(g_shell->bgproc);
+	ft_printf("[%d] %d\n", ((t_inffork *)elem->content)->x, pid);
+	if (ast->left->type != ast->left->cmd_offset
+			|| ast->left->args->argv[0][0] == '('
+			|| ast->left->args->argv[0][0] == '{')
 	{
-		pid = ((t_inffork *)elem->content)->pid;
-		if (sign == SIGCHLD && waitpid(pid, &ret, WNOHANG) == pid)
-		{
-			if (WIFCONTINUED(ret))
-				handle_bgstat(pid, BG_RUN);
-			else if (!WIFEXITED(ret))
-				handle_bgstat(pid, BG_KILL);
-			else if (WIFEXITED(ret))
-				handle_bgstat(pid, BG_END);
-			else
-				ft_printf("Sign not\n"); // A retirer
-		}
-		elem = elem->next;
+		ft_astiter(ast->left, res, iterf);
+		exit(0);
 	}
+	exec_btin_bin(ret_astargs(ast), res, iterf);
+	exit(126);
 }
 
 int				exec_cmd_background(t_ast *ast, void *res, t_iterf *iterf)
 {
 	pid_t		pid;
 	t_inffork	inf;
-	char		**args;
-	t_list		*elem;
 
 	ft_bzero(&inf, sizeof(t_inffork));
 	if ((pid = fork()) == -1)
 		return (SH_FORKFAIL);
 	if (!pid)
-	{
-		signal(SIGINT, SIG_DFL);
-		pid = getpid();
-		if (setpgid(pid, 0) == -1)
-			error_bgproc(2);
-		if (ast->left->args->argv[0][0] == '(')
-		{
-			ft_printf("Handle &> (...)\n");
-				return (0);
-		}
-		args = ret_args(ast);
-		if (handle_bgproc(pid, args, BG_RUN) == -1)
-			exit(126);
-		elem = ft_lstend(g_shell->bgproc);
-		ft_printf("[%d] %d\n", ((t_inffork *)elem->content)->x, pid);
-		exec_btin_bin(ret_astargs(ast), res, iterf);
-		exit(126);
-	}
+		son_fork(ast, res, iterf);
 	else
 	{
 		g_pid = pid;
 		handle_bgproc(pid, ret_args(ast), BG_RUN);
-		signal(SIGCHLD, sign_child);
 		ft_astiter(ast->right, res, iterf);
 	}
 	return (0);

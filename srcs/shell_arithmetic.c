@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   shell_arithmetic.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/08/23 22:17:51 by mmerabet          #+#    #+#             */
+/*   Updated: 2018/08/23 22:19:11 by mmerabet         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "shell.h"
 #include "ft_str.h"
 #include "ft_mem.h"
@@ -20,7 +32,7 @@ int	shell_arth_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	val = (EXPRT)0;
 	ft_bzero(&edata, sizeof(t_exprdata));
 	edata.var_db = &g_shell->envp;
-	if ((efail = ft_expr(ep, &val, &edata)))
+	if ((efail = ft_expr(ep, &val, &edata, g_shell->curargs)))
 	{
 		*epe = ']';
 		return (SH_EXPRERR + efail);
@@ -33,39 +45,46 @@ int	shell_arth_cb(t_ast *ast, void **op, void *res, t_iterf *iterf)
 	return (0);
 }
 
-int	exp_cond(char *tld, int n[3], void *data, char **res)
+int	exp_arth(t_strid *sid, char **res, t_expf *expf)
 {
 	EXPRT		val;
 	int			err;
 	t_exprdata	edata;
 
-	(void)data;
+	(void)expf;
 	val = (EXPRT)0;
-	tld[n[0] - 1] = '\0';
+	sid->str[sid->len - 2] = '\0';
 	ft_bzero(&edata, sizeof(t_exprdata));
 	edata.var_db = &g_shell->envp;
-	if ((err = ft_expr(tld + 2, &val, &edata)))
+	if ((err = ft_expr(sid->str + 3, &val, &edata, g_shell->curargs)))
 	{
-		tld[n[0] - 1] = ']';
+		sid->str[sid->len - 2] = ')';
 		*res = NULL;
 		return (SH_EXPRERR + err);
 	}
-	tld[n[0] - 1] = ']';
+	sid->str[sid->len - 2] = ')';
 	*res = ft_lltoa(val);
 	return (0);
-	ft_printf("arithmetic expansion '%s' %d %d\n", tld + 3, n[1], n[2]);
 }
 
-int	exp_bslash(char *tld, int n[3], void *data, char **res)
+int	exp_cond(t_strid *sid, char **res, t_expf *expf)
 {
-	(void)n;
-	(void)data;
-//	if (*tld == '\033')
-//		*res = ft_strdup("~");
-//	else if (tld[1] == '~')
-//		*res = ft_strdup("\033~");
-//	else
-		*res = ft_strndup(tld + 1, 1);
+	EXPRT		val;
+	int			err;
+	t_exprdata	edata;
+
+	(void)expf;
+	val = (EXPRT)0;
+	sid->str[sid->len - 1] = '\0';
+	ft_bzero(&edata, sizeof(t_exprdata));
+	edata.var_db = &g_shell->envp;
+	if ((err = ft_expr(sid->str + 2, &val, &edata, g_shell->curargs)))
+	{
+		sid->str[sid->len - 1] = ']';
+		*res = NULL;
+		return (SH_EXPRERR + err);
+	}
+	sid->str[sid->len - 1] = ']';
+	*res = ft_lltoa(val);
 	return (0);
-	ft_printf("bslash expansion %d '%s' %d %d\n", n[0], tld, n[1], n[2]);
 }

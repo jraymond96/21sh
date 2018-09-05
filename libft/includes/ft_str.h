@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/19 18:42:15 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/16 22:34:40 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/02 21:45:14 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ char				*ft_strstr(const char *a, const char *b);
 char				*ft_strnstr(const char *a, const char *b, size_t n);
 char				*ft_strpbrk(const char *s, const char *charset);
 int					ft_strpbrk_pos(const char *s, const char *charset);
+int					ft_strnpbrk_pos(const char *s, const char *charset, size_t n);
 int					ft_strnrpbrk_pos(const char *s,
 								const char *charset,
 								size_t n);
@@ -171,9 +172,11 @@ int					ft_strbetweenps_ext(char **s, const char *ext);
 
 char				*ft_strjoin(const char *a, const char *b);
 char				*ft_strnjoin(const char *a, const char *b, size_t n);
+char				*ft_strn2join(const char *a, const char *b, size_t n);
 char				*ft_strjoinc(const char *a, char b);
 char				*ft_strjoincs(char a, const char *b);
 char				*ft_strnjoin_clr(char *a, char *b, size_t n, int d);
+char				*ft_strn2join_clr(char *a, char *b, size_t n, int d);
 char				*ft_strjoin_clr(char *a, char *b, int d);
 char				*ft_strjoinc_clr(char *a, char b);
 char				*ft_strjoincs_clr(char a, char *b);
@@ -181,6 +184,9 @@ char				*ft_strjoinl(const char *a, const char *b);
 char				*ft_strnjoinl(const char *a, const char *b, size_t n);
 char				*ft_strjoinl_clr(char *a, char *b, int d);
 char				*ft_strnjoinl_clr(char *a, char *b, size_t n, int d);
+
+char				*ft_strinsert(char *a, char *b, size_t start, size_t size);
+char				*ft_strerase(char *a, size_t start, size_t end);
 
 typedef struct		s_pairint
 {
@@ -203,6 +209,12 @@ typedef struct		s_mchi
 	int				level;
 	struct s_mchi	*next;
 }					t_mchi;
+
+typedef struct		s_strmchi
+{
+	char			*str;
+	t_mchi			*mchi;
+}					t_strmchi;
 
 # define RGX_END 1
 # define RGX_BKSLSH 2

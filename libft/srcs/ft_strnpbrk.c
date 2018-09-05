@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/02 18:02:45 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/05/28 16:10:51 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/09/02 21:45:12 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,35 +26,54 @@ int		ft_strnrpbrk_pos(const char *s, const char *charset, size_t n)
 	return (i);
 }
 
+int		ft_strnpbrk_pos(const char *s, const char *charset, size_t n)
+{
+	size_t	i;
+
+	if (!s || !charset)
+		return (-1);
+	i = 0;
+	while (s[i] && i < n)
+	{
+		if (ft_strchr(charset, s[i]))
+			return ((int)i);
+		++i;
+	}
+	return (-1);
+}
+
 int		ft_strnpbrkl_pos(const char *s, const char *charset, size_t n)
 {
-	char	*sc;
-	char	tmp;
-	int		len;
+	size_t	i;
+	int		u;
 
-	sc = (char *)s;
-	if (n > (size_t)(len = ft_strlen(s)))
-		n = (size_t)len;
-	tmp = sc[n];
-	sc[n] = '\0';
-	len = ft_strpbrkl_pos(sc, charset);
-	sc[n] = tmp;
-	return (len);
+	if (!s || !charset)
+		return (-1);
+	i = 0;
+	u = 1;
+	while (s[i] && i < n)
+	{
+		if (s[i] == '\\' && u)
+		{
+			++i;
+			u = 0;
+		}
+		else
+		{
+			if (u && ft_strchr(charset, s[i]))
+				return ((int)i);
+			u = 1;
+			++i;
+		}
+	}
+	return (-1);
 }
 
 char	*ft_strnpbrkl(const char *s, const char *charset, size_t n)
 {
-	char	*sc;
-	char	tmp;
-	size_t	len;
-	char	*ptr;
+	int	pos;
 
-	sc = (char *)s;
-	if (n > (len = ft_strlen(s)))
-		n = len;
-	tmp = sc[n];
-	sc[n] = '\0';
-	ptr = ft_strpbrkl(sc, charset);
-	sc[n] = tmp;
-	return (ptr);
+	if ((pos = ft_strnpbrkl_pos(s, charset, n)) == -1)
+		return (NULL);
+	return ((char *)(s + pos));
 }

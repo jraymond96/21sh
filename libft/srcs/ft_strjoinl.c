@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strjoinl.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/08/23 20:08:58 by mmerabet          #+#    #+#             */
+/*   Updated: 2018/08/23 20:09:44 by mmerabet         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_str.h"
 
 char	*ft_strjoinl(const char *a, const char *b)
@@ -24,8 +36,9 @@ char	*ft_strnjoinl(const char *a, const char *b, size_t n)
 	size_t	bl;
 
 	al = (a ? ft_strlen(a) : 0);
-	bl = (b ? ft_strlenl(b) : 0);
-	if (!(s = ft_strnew(al + bl)))
+	if (n > (bl = (b ? ft_strlenl(b) : 0)))
+		n = bl;
+	if (!(s = ft_strnew(al + n)))
 		return ((char *)a);
 	if (a)
 		ft_strcat(s, a);

@@ -6,7 +6,7 @@
 /*   By: jraymond <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/25 16:03:52 by jraymond          #+#    #+#             */
-/*   Updated: 2018/08/07 18:12:06 by jraymond         ###   ########.fr       */
+/*   Updated: 2018/08/17 14:16:38 by jraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,7 @@ static	t_list		*check_args(int argc, char **argv, int numprocbg)
 	if (elem && (((t_inffork *)elem->content)->status[0] != 'K' ||
 				((t_inffork *)elem->content)->status[0] != 'D'))
 		return (elem);
-	else
-		return (error_fg(argv, 0));
+	return (error_fg(argv, 0));
 }
 
 int					builtin_fg(int argc, char **argv)
@@ -64,14 +63,15 @@ int					builtin_fg(int argc, char **argv)
 	int		status;
 
 	if (!(elem = check_args(argc, argv, ft_atoi(argv[1]))))
-		return (-1);
+		return (1);
 	else
 	{
 		print_cmd_args2(((t_inffork *)elem->content)->cmd);
 		if (((t_inffork *)elem->content)->status[0] == 'S')
 			kill(((t_inffork *)elem->content)->pid, SIGCONT);
 		tcsetpgrp(0, ((t_inffork *)elem->content)->pid);
-		if (waitpid(((t_inffork *)elem->content)->pid, &status, WUNTRACED) == -1)
+		if (waitpid(((t_inffork *)elem->content)->pid,
+					&status, WUNTRACED) == -1)
 			tcsetpgrp(0, getpgrp());
 		else
 		{

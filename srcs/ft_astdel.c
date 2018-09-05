@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/06 01:54:11 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/07/21 19:10:14 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/08/23 20:22:37 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,35 +16,6 @@
 #include "ft_list.h"
 #include "ft_printf.h"
 #include "ft_types.h"
-
-char		*typestr(int type)
-{
-	static char	*strfree;
-
-	if (strfree)
-		ft_memdel((void **)&strfree);
-	if (type == TK_CMD)
-		return ("TK_CMD");
-	else if (type == TK_OP)
-		return ("TK_OP");
-	else if (type == TK_LEFT)
-		return ("TK_LEFT");
-	else if (type == TK_LLEFT)
-		return ("TK_LLEFT");
-	else if (type == TK_RIGHT)
-		return ("TK_RIGHT");
-	else if (type == TK_LRIGHT)
-		return ("TK_LRIGHT");
-	else if (type == TK_REDIR)
-		return ("TK_REDIR");
-	else if (type == TK_PIPE)
-		return ("TK_PIPE");
-	else if (type == TK_ANDOR)
-		return ("TK_ANDOR");
-	else if (type == TK_SEMICOLON)
-		return ("TK_SEMICOLON");
-	return ((strfree = ft_itoa(type)));
-}
 
 void		ft_astprint(t_ast *bt, int n)
 {
@@ -69,6 +40,13 @@ void		ft_astprint(t_ast *bt, int n)
 	ft_printf("%?*\t}\n%1$?*\tRight {\n", n);
 	ft_astprint(bt->right, n + 1);
 	ft_printf("%?*\t}\n", n);
+}
+
+int			ft_astvalid(t_ast *ast)
+{
+	if (!ast || !ast->name)
+		return (0);
+	return (1);
 }
 
 void		astdelone(t_ast **ast)
