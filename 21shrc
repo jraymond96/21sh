@@ -1,0 +1,11 @@
+# Fonction qui va afficher la fleche a la fin du prompt avec la valeur de
+# retour de l'ancienne commande si elle est differente de zero
+print_arrow := {
+	e := $?;
+	if $[e] then
+		echo -n '%{lred/bold}('$e')';
+	echo '❯';
+};
+
+# Puis nous modifions la valeur de la variable PROMPT
+PROMPT := '%{bold}㋜%{0} %{lred}$USER %{lcyan}$(pwd -hn)%{0} $(print_arrow)%{0} '
